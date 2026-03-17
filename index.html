@@ -3,153 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Body Coffee | Pagamentos e Avaliações</title>
+    <title>Body Coffee | Experiência Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { coffee: { dark: '#1e1e2f', brown: '#2b1d18', orange: '#ff7b54', fire: '#ff5722' } } } }
+        }
+    </script>
 </head>
-<body class="font-body scroll-smooth main-gradient text-white">
+<body class="font-body scroll-smooth main-gradient text-white overflow-x-hidden">
 
-    <!-- Navbar com Carrinho -->
+    <!-- Navegação Estilo App -->
     <nav class="fixed top-0 w-full z-50 glass-card px-6 py-4 flex justify-between items-center">
-        <a href="#" class="font-display text-xl font-bold">☕ Body Coffee</a>
-        <div class="flex gap-6 items-center">
-            <a href="#avaliacoes" class="hidden md:block">Avaliações</a>
-            <button onclick="abrirCarrinho()" class="bg-orange-500 px-4 py-2 rounded-full font-bold shadow-lg hover:scale-105 transition">
-                🛒 Itens: <span id="cart-count">0</span>
-            </button>
+        <a href="#" class="font-display text-2xl font-bold">☕ Body Coffee</a>
+        <button onclick="toggleCart()" class="bg-coffee-orange px-4 py-2 rounded-full font-bold shadow-lg hover:scale-110 transition">
+            🛒 <span id="cart-count">0</span>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <section class="min-h-screen flex flex-col justify-center items-center text-center px-6">
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative">
+        <div class="steam-container mb-4">
+            <div class="steam animate-steam"></div>
+            <div class="steam animate-steam" style="animation-delay: 0.5s"></div>
+        </div>
         <h1 class="font-display text-6xl md:text-8xl animate-glow mb-4">Body Coffee</h1>
-        <p class="text-xl opacity-80">Peça online e avalie nossa experiência.</p>
-        <a href="#cardapio" class="mt-8 btn-primary px-10 py-4 rounded-full font-bold">Ver Cardápio</a>
+        <p class="text-xl opacity-80 max-w-lg">O café mais instagramável da cidade agora na palma da sua mão.</p>
+        <a href="#cardapio" class="mt-8 btn-primary px-10 py-4 rounded-full font-bold text-lg">Fazer Pedido</a>
     </section>
 
-    <!-- Cardápio com Sistema de Preço -->
+    <!-- Cardápio Interativo -->
     <section id="cardapio" class="py-20 px-6 max-w-6xl mx-auto">
-        <h2 class="font-display text-4xl text-center mb-12">Nosso Cardápio</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="glass-card p-6 rounded-3xl text-center">
-                <h3 class="text-xl font-bold">Pink Latte</h3>
-                <p class="text-orange-400 font-bold text-2xl my-2">R$ 18,00</p>
-                <button onclick="addCart('Pink Latte', 18.00)" class="btn-primary w-full py-2 rounded-xl">Adicionar</button>
+        <h2 class="font-display text-4xl text-center mb-12">Escolha seu Favorito</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="glass-card p-8 rounded-3xl text-center hover-scale">
+                <h3 class="text-2xl font-bold">Pink Latte</h3>
+                <p class="text-coffee-orange font-bold text-2xl my-4">R$ 18,00</p>
+                <button onclick="addToCart('Pink Latte', 18.00)" class="btn-primary w-full py-3 rounded-xl font-bold">Adicionar</button>
             </div>
-            <div class="glass-card p-6 rounded-3xl text-center">
-                <h3 class="text-xl font-bold">Red Velvet</h3>
-                <p class="text-orange-400 font-bold text-2xl my-2">R$ 25,00</p>
-                <button onclick="addCart('Red Velvet', 25.00)" class="btn-primary w-full py-2 rounded-xl">Adicionar</button>
+            <div class="glass-card p-8 rounded-3xl text-center hover-scale">
+                <h3 class="text-2xl font-bold">Cloud Cappuccino</h3>
+                <p class="text-coffee-orange font-bold text-2xl my-4">R$ 22,00</p>
+                <button onclick="addToCart('Cloud Cappuccino', 22.00)" class="btn-primary w-full py-3 rounded-xl font-bold">Adicionar</button>
+            </div>
+            <div class="glass-card p-8 rounded-3xl text-center hover-scale">
+                <h3 class="text-2xl font-bold">Red Velvet Cake</h3>
+                <p class="text-coffee-orange font-bold text-2xl my-4">R$ 25,00</p>
+                <button onclick="addToCart('Red Velvet Cake', 25.00)" class="btn-primary w-full py-3 rounded-xl font-bold">Adicionar</button>
             </div>
         </div>
     </section>
 
-    <!-- Sistema de Avaliações Funcional -->
+    <!-- Sistema de Avaliações -->
     <section id="avaliacoes" class="py-20 px-6 bg-black/20">
         <div class="max-w-4xl mx-auto">
-            <h2 class="font-display text-4xl text-center mb-10">Avalie sua Experiência</h2>
-            
-            <div class="glass-card p-8 rounded-2xl mb-10">
-                <div class="flex flex-col gap-4">
-                    <input type="text" id="rev-name" placeholder="Seu nome" class="input-field">
-                    <div class="flex gap-2 text-2xl text-yellow-500" id="star-rating">
-                        <span onclick="setRating(1)" class="cursor-pointer">★</span>
-                        <span onclick="setRating(2)" class="cursor-pointer">★</span>
-                        <span onclick="setRating(3)" class="cursor-pointer">★</span>
-                        <span onclick="setRating(4)" class="cursor-pointer">★</span>
-                        <span onclick="setRating(5)" class="cursor-pointer">★</span>
-                    </div>
-                    <textarea id="rev-text" placeholder="O que você achou?" class="input-field"></textarea>
-                    <button onclick="salvarAvaliacao()" class="btn-primary py-3 rounded-xl font-bold">Publicar Avaliação</button>
+            <h2 class="font-display text-4xl text-center mb-10">O que achou?</h2>
+            <div class="glass-card p-8 rounded-2xl mb-12">
+                <input type="text" id="rev-name" placeholder="Seu Nome" class="input-field mb-4">
+                <div class="flex gap-2 text-3xl text-yellow-500 mb-4" id="star-rating">
+                    <span onclick="setStars(1)" class="cursor-pointer">★</span>
+                    <span onclick="setStars(2)" class="cursor-pointer">★</span>
+                    <span onclick="setStars(3)" class="cursor-pointer">★</span>
+                    <span onclick="setStars(4)" class="cursor-pointer">★</span>
+                    <span onclick="setStars(5)" class="cursor-pointer">★</span>
                 </div>
+                <textarea id="rev-text" placeholder="Deixe seu feedback..." class="input-field mb-4"></textarea>
+                <button onclick="saveReview()" class="btn-primary px-8 py-3 rounded-xl font-bold">Publicar</button>
             </div>
-
-            <div id="lista-avaliacoes" class="grid gap-4">
-                <!-- Avaliações aparecerão aqui -->
-            </div>
+            <div id="reviews-display" class="grid gap-4"></div>
         </div>
     </section>
 
-    <!-- Modal do Carrinho (Pagamento) -->
-    <div id="modal-cart" class="fixed inset-0 bg-black/80 hidden z-[60] flex items-center justify-center p-6">
-        <div class="glass-card p-8 rounded-3xl max-w-md w-full">
-            <h2 class="text-2xl font-bold mb-4">Seu Pedido</h2>
-            <div id="cart-list" class="max-h-60 overflow-y-auto mb-4 border-b border-white/10"></div>
-            <p class="text-xl font-bold mb-6">Total: R$ <span id="cart-total">0,00</span></p>
-            <div class="flex flex-col gap-3">
-                <button onclick="checkout()" class="bg-green-600 py-4 rounded-xl font-bold hover:bg-green-500 transition">Finalizar e Pagar via WhatsApp</button>
-                <button onclick="abrirCarrinho()" class="text-sm opacity-70">Continuar Comprando</button>
+    <!-- Carrinho & Pagamento -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-6">
+        <div class="glass-card p-8 rounded-3xl w-full max-w-md relative">
+            <h2 class="text-2xl font-bold mb-6">Resumo do Pedido</h2>
+            <div id="cart-list" class="max-h-60 overflow-y-auto mb-6"></div>
+            <div class="text-xl font-bold border-t border-white/10 pt-4 flex justify-between">
+                <span>Total:</span> <span id="cart-total">R$ 0,00</span>
             </div>
+            <button onclick="sendOrder()" class="w-full bg-green-600 py-4 rounded-xl font-bold mt-6 hover:bg-green-500 transition">Finalizar via WhatsApp</button>
+            <button onclick="toggleCart()" class="w-full mt-4 text-white/50 text-sm">Continuar Comprando</button>
         </div>
     </div>
 
     <script>
         let cart = [];
-        let rating = 0;
+        let stars = 0;
 
-        // --- SISTEMA DE CARRINHO E PAGAMENTO ---
-        function addCart(nome, preco) {
-            cart.push({nome, preco});
+        function addToCart(name, price) {
+            cart.push({name, price});
             document.getElementById('cart-count').innerText = cart.length;
-            alert(`Adicionado: ${nome}`);
+            alert(name + " adicionado!");
         }
 
-        function abrirCarrinho() {
-            const modal = document.getElementById('modal-cart');
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
             modal.classList.toggle('hidden');
-            renderCart();
-        }
-
-        function renderCart() {
             const list = document.getElementById('cart-list');
             let total = 0;
             list.innerHTML = cart.map(i => {
-                total += i.preco;
-                return `<div class="flex justify-between py-2"><span>${i.nome}</span><span>R$ ${i.preco.toFixed(2)}</span></div>`;
+                total += i.price;
+                return `<div class="flex justify-between py-2"><span>${i.name}</span><span>R$ ${i.price.toFixed(2)}</span></div>`;
             }).join('');
-            document.getElementById('cart-total').innerText = total.toFixed(2);
+            document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2)}`;
         }
 
-        function checkout() {
-            if(cart.length === 0) return alert("Carrinho vazio!");
-            let msg = `*Novo Pedido Body Coffee*%0A------------------%0A`;
-            cart.forEach(i => msg += `- ${i.nome}: R$ ${i.preco.toFixed(2)}%0A`);
-            msg += `------------------%0A*Total: R$ ${document.getElementById('cart-total').innerText}*`;
-            window.open(`https://wa.me{msg}`); // Troque pelo seu número
+        function sendOrder() {
+            if(cart.length === 0) return alert("Adicione itens primeiro!");
+            let text = "*Novo Pedido Body Coffee*%0A%0A";
+            cart.forEach(i => text += `- ${i.name}: R$ ${i.price.toFixed(2)}%0A`);
+            text += `%0A*Total: ${document.getElementById('cart-total').innerText}*`;
+            window.open(`https://wa.me{text}`); // TROQUE O NÚMERO AQUI
         }
 
-        // --- SISTEMA DE AVALIAÇÕES ---
-        function setRating(n) {
-            rating = n;
-            const stars = document.getElementById('star-rating').children;
-            for(let i=0; i<5; i++) stars[i].style.color = i < n ? '#facc15' : '#4b5563';
+        function setStars(n) {
+            stars = n;
+            const s = document.getElementById('star-rating').children;
+            for(let i=0; i<5; i++) s[i].style.color = i < n ? '#facc15' : '#4b5563';
         }
 
-        function salvarAvaliacao() {
-            const nome = document.getElementById('rev-name').value;
-            const texto = document.getElementById('rev-text').value;
-            if(!nome || !texto || rating === 0) return alert("Preencha tudo!");
-
-            const novaRev = { nome, texto, rating, data: new Date().toLocaleDateString() };
-            let reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
-            reviews.unshift(novaRev);
-            localStorage.setItem('reviews', JSON.stringify(reviews));
-            
+        function saveReview() {
+            const n = document.getElementById('rev-name').value;
+            const t = document.getElementById('rev-text').value;
+            if(!n || !t || stars === 0) return alert("Preencha tudo!");
+            const rev = { n, t, stars, d: new Date().toLocaleDateString() };
+            let revs = JSON.parse(localStorage.getItem('reviews') || '[]');
+            revs.unshift(rev);
+            localStorage.setItem('reviews', JSON.stringify(revs));
+            renderReviews();
             document.getElementById('rev-name').value = '';
             document.getElementById('rev-text').value = '';
-            setRating(0);
-            renderReviews();
+            setStars(0);
         }
 
         function renderReviews() {
-            const lista = document.getElementById('lista-avaliacoes');
-            const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
-            lista.innerHTML = reviews.map(r => `
-                <div class="glass-card p-6 rounded-xl border-l-4 border-orange-500">
-                    <div class="flex justify-between font-bold mb-2"><span>${r.nome}</span><span class="text-yellow-500">${'★'.repeat(r.rating)}</span></div>
-                    <p class="opacity-80">${r.texto}</p>
-                    <small class="opacity-50">${r.data}</small>
+            const display = document.getElementById('reviews-display');
+            const revs = JSON.parse(localStorage.getItem('reviews') || '[]');
+            display.innerHTML = revs.map(r => `
+                <div class="glass-card p-6 rounded-xl border-l-4 border-coffee-orange">
+                    <div class="flex justify-between font-bold"><span>${r.n}</span><span class="text-yellow-500">${'★'.repeat(r.stars)}</span></div>
+                    <p class="opacity-80 mt-2">${r.t}</p>
                 </div>
             `).join('');
         }
