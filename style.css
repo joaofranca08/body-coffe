@@ -1,12 +1,7 @@
 /* Configurações Gerais */
-html, body { 
-    height: 100%; 
-    margin: 0; 
-    box-sizing: border-box; 
+body {
+    box-sizing: border-box;
 }
-
-.font-display { font-family: 'Playfair Display', serif; }
-.font-body { font-family: 'Poppins', sans-serif; }
 
 .main-gradient {
     background: linear-gradient(135deg, #1e1e2f, #2b1d18);
@@ -15,6 +10,9 @@ html, body {
 .hero-section {
     background: radial-gradient(ellipse at top, #ff7b54 0%, #2b1d18 70%);
 }
+
+.font-display { font-family: 'Playfair Display', serif; }
+.font-body { font-family: 'Poppins', sans-serif; }
 
 /* Animações */
 @keyframes float {
@@ -27,7 +25,7 @@ html, body {
         text-shadow: 0 0 5px #fff, 0 0 10px #ff7b54, 0 0 20px #ff5722, 0 0 40px #ff3d00;
     }
     50% { 
-        text-shadow: 0 0 10px #fff, 0 0 20px #ff7b54, 0 0 40px #ff5722, 0 0 60px #ff3d00, 0 0 80px #ff3d00;
+        text-shadow: 0 0 10px #fff, 0 0 20px #ff7b54, 0 0 40px #ff5722, 0 0 60px #ff3d00;
     }
 }
 
@@ -41,7 +39,7 @@ html, body {
 .animate-glow { animation: pulse-glow 3s ease-in-out infinite; }
 .animate-steam { animation: steam 2s ease-out infinite; }
 
-/* Componentes Visuais */
+/* Elementos Visuais */
 .steam-container {
     position: absolute;
     top: -30px;
