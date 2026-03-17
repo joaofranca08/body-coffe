@@ -1,35 +1,38 @@
-body { background: #1e1e2f; }
-.main-gradient { background: linear-gradient(135deg, #1e1e2f, #2b1d18); }
-.hero-section { background: radial-gradient(circle at top, #ff7b54 -40%, #1e1e2f 80%); }
+/* Configurações de Fundo */
+body { box-sizing: border-box; }
+.main-gradient { background: linear-gradient(135deg, #1e1e2f 0%, #2b1d18 100%); }
+.hero-section { background: radial-gradient(ellipse at top, #ff7b54 -30%, #1e1e2f 70%); }
 .font-display { font-family: 'Playfair Display', serif; }
 
+/* Efeito Vidro */
 .glass-card {
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.btn-primary {
-    background: linear-gradient(90deg, #ff7b54, #ff5722);
-    transition: 0.3s;
-}
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 87, 34, 0.3); }
-
-.input-field {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    border-radius: 0.75rem;
-    outline: none;
-    color: white;
-}
-.input-field:focus { border-color: #ff7b54; }
-
-.nav-link { opacity: 0.7; transition: 0.3s; }
-.nav-link:hover { opacity: 1; color: #ff7b54; }
-
+/* Animações de Vapor e Brilho */
 @keyframes glow {
-    0%, 100% { text-shadow: 0 0 10px #ff7b54; }
-    50% { text-shadow: 0 0 25px #ff5722; }
+    0%, 100% { text-shadow: 0 0 10px #ff7b54, 0 0 20px #ff5722; }
+    50% { text-shadow: 0 0 25px #fff, 0 0 40px #ff7b54; }
+}
+@keyframes steam {
+    0% { transform: translateY(0); opacity: 0.6; }
+    100% { transform: translateY(-35px); opacity: 0; }
 }
 .animate-glow { animation: glow 3s infinite; }
+.animate-steam { width: 10px; height: 25px; background: white; border-radius: 50%; filter: blur(5px); animation: steam 2s infinite; }
+.steam-container { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); }
+
+/* Botões e Inputs */
+.btn-primary { background: linear-gradient(135deg, #ff7b54, #ff5722); transition: 0.3s; }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255, 87, 34, 0.4); }
+
+.input-field { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1.2rem; border-radius: 1rem; outline: none; transition: 0.3s; color: white; }
+.input-field:focus { border-color: #ff7b54; background: rgba(255, 255, 255, 0.1); }
+
+/* Navegação */
+.nav-link { opacity: 0.8; transition: 0.3s; position: relative; }
+.nav-link:hover { opacity: 1; color: #ff7b54; }
+.hover-scale { transition: 0.4s; }
+.hover-scale:hover { transform: translateY(-10px); }
