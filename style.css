@@ -1,48 +1,28 @@
-body { box-sizing: border-box; }
-.main-gradient { background: linear-gradient(135deg, #1e1e2f, #2b1d18); }
-.hero-section { background: radial-gradient(ellipse at top, #ff7b54 0%, #2b1d18 70%); }
+.main-gradient { background: #1e1e2f; }
+.hero-section { background: radial-gradient(circle, #ff7b54 0%, #1e1e2f 100%); }
 .font-display { font-family: 'Playfair Display', serif; }
-.font-body { font-family: 'Poppins', sans-serif; }
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(5deg); }
-}
-@keyframes pulse-glow {
-    0%, 100% { text-shadow: 0 0 5px #fff, 0 0 10px #ff7b54, 0 0 20px #ff5722; }
-    50% { text-shadow: 0 0 10px #fff, 0 0 30px #ff7b54, 0 0 50px #ff5722; }
-}
-@keyframes steam {
-    0% { transform: translateY(0) scaleX(1); opacity: 0.6; }
-    100% { transform: translateY(-30px) scaleX(0.8); opacity: 0; }
-}
-
-.animate-float { animation: float 6s ease-in-out infinite; }
-.animate-glow { animation: pulse-glow 3s ease-in-out infinite; }
-.animate-steam { animation: steam 2s ease-out infinite; }
-
-.steam-container { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); }
-.steam { width: 8px; height: 20px; background: rgba(255,255,255,0.4); border-radius: 50%; filter: blur(3px); }
+.text-coffee-orange { color: #ff7b54; }
 
 .glass-card {
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
-.nav-link { 
-    color: rgba(255,255,255,0.8);
-    transition: color 0.3s;
-    position: relative;
-}
-.nav-link:hover { color: white; }
-.nav-link::after {
-    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
-    background: #ff7b54; transition: width 0.3s;
-}
-.nav-link:hover::after { width: 100%; }
 
 .btn-primary {
-    background: linear-gradient(135deg, #ff7b54, #ff5722);
-    box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+    background: linear-gradient(90deg, #ff7b54, #ff5722);
+    transition: transform 0.2s;
 }
+.btn-primary:hover { transform: scale(1.02); }
+
+.nav-link {
+    position: relative;
+    opacity: 0.8;
+}
+.nav-link:hover { opacity: 1; }
+
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 10px #ff7b54; }
+    50% { text-shadow: 0 0 20px #ff5722; }
+}
+.animate-glow { animation: glow 3s infinite; }
