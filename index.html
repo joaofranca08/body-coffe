@@ -1,155 +1,160 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Body Coffee | Experiência Premium</title>
+    <title>Body Coffee | Simulação Escolar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <script>
-        tailwind.config = {
-            theme: { extend: { colors: { coffee: { dark: '#1e1e2f', brown: '#2b1d18', orange: '#ff7b54', fire: '#ff5722' } } } }
-        }
-    </script>
+    <style>
+        :root { --orange: #ff7b54; --dark: #1e1e2f; }
+        body { font-family: 'Poppins', sans-serif; background: var(--dark); color: white; scroll-behavior: smooth; }
+        .font-display { font-family: 'Playfair Display', serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; }
+        .btn-primary { background: linear-gradient(90deg, #ff7b54, #ff5722); transition: 0.3s; color: white; font-weight: bold; }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 123, 84, 0.4); }
+        
+        /* Modal Style */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+        .input-field { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; width: 100%; outline: none; margin-top: 5px; }
+        .input-field:focus { border-color: var(--orange); }
+    </style>
 </head>
-<body class="font-body scroll-smooth main-gradient text-white overflow-x-hidden">
+<body>
 
-    <!-- Navegação Estilo App -->
-    <nav class="fixed top-0 w-full z-50 glass-card px-6 py-4 flex justify-between items-center">
-        <a href="#" class="font-display text-2xl font-bold">☕ Body Coffee</a>
-        <button onclick="toggleCart()" class="bg-coffee-orange px-4 py-2 rounded-full font-bold shadow-lg hover:scale-110 transition">
-            🛒 <span id="cart-count">0</span>
-        </div>
+    <!-- Nav -->
+    <nav class="p-6 flex justify-between items-center glass sticky top-0 z-50 m-4">
+        <h1 class="font-display text-2xl">☕ Body Coffee</h1>
+        <button onclick="abrirCarrinho()" class="btn-primary px-6 py-2 rounded-full">
+            🛒 Carrinho (<span id="cart-count">0</span>)
+        </button>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="hero" class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative">
-        <div class="steam-container mb-4">
-            <div class="steam animate-steam"></div>
-            <div class="steam animate-steam" style="animation-delay: 0.5s"></div>
-        </div>
-        <h1 class="font-display text-6xl md:text-8xl animate-glow mb-4">Body Coffee</h1>
-        <p class="text-xl opacity-80 max-w-lg">O café mais instagramável da cidade agora na palma da sua mão.</p>
-        <a href="#cardapio" class="mt-8 btn-primary px-10 py-4 rounded-full font-bold text-lg">Fazer Pedido</a>
+    <!-- Hero -->
+    <section class="py-20 text-center px-6">
+        <h2 class="font-display text-5xl md:text-7xl mb-4">Trabalho de Escola</h2>
+        <p class="text-orange-400 font-bold tracking-widest uppercase">Simulador de E-commerce</p>
     </section>
 
-    <!-- Cardápio Interativo -->
-    <section id="cardapio" class="py-20 px-6 max-w-6xl mx-auto">
-        <h2 class="font-display text-4xl text-center mb-12">Escolha seu Favorito</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="glass-card p-8 rounded-3xl text-center hover-scale">
-                <h3 class="text-2xl font-bold">Pink Latte</h3>
-                <p class="text-coffee-orange font-bold text-2xl my-4">R$ 18,00</p>
-                <button onclick="addToCart('Pink Latte', 18.00)" class="btn-primary w-full py-3 rounded-xl font-bold">Adicionar</button>
-            </div>
-            <div class="glass-card p-8 rounded-3xl text-center hover-scale">
-                <h3 class="text-2xl font-bold">Cloud Cappuccino</h3>
-                <p class="text-coffee-orange font-bold text-2xl my-4">R$ 22,00</p>
-                <button onclick="addToCart('Cloud Cappuccino', 22.00)" class="btn-primary w-full py-3 rounded-xl font-bold">Adicionar</button>
-            </div>
-            <div class="glass-card p-8 rounded-3xl text-center hover-scale">
-                <h3 class="text-2xl font-bold">Red Velvet Cake</h3>
-                <p class="text-coffee-orange font-bold text-2xl my-4">R$ 25,00</p>
-                <button onclick="addToCart('Red Velvet Cake', 25.00)" class="btn-primary w-full py-3 rounded-xl font-bold">Adicionar</button>
-            </div>
+    <!-- Cardápio -->
+    <main id="menu" class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6 pb-20">
+        <div class="glass p-8 text-center">
+            <span class="text-5xl">☕</span>
+            <h3 class="text-xl font-bold mt-4">Espresso Premium</h3>
+            <p class="text-2xl text-orange-400 font-bold my-4">R$ 10,00</p>
+            <button onclick="add(10, 'Espresso')" class="btn-primary w-full py-2 rounded-lg">ADICIONAR</button>
         </div>
-    </section>
+        <div class="glass p-8 text-center">
+            <span class="text-5xl">🍰</span>
+            <h3 class="text-xl font-bold mt-4">Bolo Red Velvet</h3>
+            <p class="text-2xl text-orange-400 font-bold my-4">R$ 20,00</p>
+            <button onclick="add(20, 'Bolo Red Velvet')" class="btn-primary w-full py-2 rounded-lg">ADICIONAR</button>
+        </div>
+        <div class="glass p-8 text-center">
+            <span class="text-5xl">🍩</span>
+            <h3 class="text-xl font-bold mt-4">Donut Especial</h3>
+            <p class="text-2xl text-orange-400 font-bold my-4">R$ 15,00</p>
+            <button onclick="add(15, 'Donut Especial')" class="btn-primary w-full py-2 rounded-lg">ADICIONAR</button>
+        </div>
+    </main>
 
-    <!-- Sistema de Avaliações -->
-    <section id="avaliacoes" class="py-20 px-6 bg-black/20">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="font-display text-4xl text-center mb-10">O que achou?</h2>
-            <div class="glass-card p-8 rounded-2xl mb-12">
-                <input type="text" id="rev-name" placeholder="Seu Nome" class="input-field mb-4">
-                <div class="flex gap-2 text-3xl text-yellow-500 mb-4" id="star-rating">
-                    <span onclick="setStars(1)" class="cursor-pointer">★</span>
-                    <span onclick="setStars(2)" class="cursor-pointer">★</span>
-                    <span onclick="setStars(3)" class="cursor-pointer">★</span>
-                    <span onclick="setStars(4)" class="cursor-pointer">★</span>
-                    <span onclick="setStars(5)" class="cursor-pointer">★</span>
+    <!-- MODAL 1: CARRINHO -->
+    <div id="modal-carrinho" class="modal-overlay">
+        <div class="glass p-8 w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-4">Seu Carrinho</h2>
+            <div id="lista-carrinho" class="mb-4 space-y-2 border-b border-white/10 pb-4"></div>
+            <div class="flex justify-between font-bold text-xl mb-6">
+                <span>Total:</span> <span id="total-val">R$ 0,00</span>
+            </div>
+            <button onclick="irParaPagamento()" class="btn-primary w-full py-4 rounded-xl mb-4">PROSSEGUIR PARA PAGAMENTO</button>
+            <button onclick="fecharModais()" class="w-full text-white/40">Continuar Comprando</button>
+        </div>
+    </div>
+
+    <!-- MODAL 2: PAGAMENTO (SIMULAÇÃO) -->
+    <div id="modal-pagamento" class="modal-overlay">
+        <div class="glass p-8 w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-2">Simulação de Pagamento</h2>
+            <p class="text-xs text-orange-400 mb-6 font-bold">⚠️ ESTE É UM SITE DE TESTE ESCOLAR</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs">NÚMERO DO CARTÃO (TESTE)</label>
+                    <input type="text" placeholder="4444 4444 4444 4444" class="input-field">
                 </div>
-                <textarea id="rev-text" placeholder="Deixe seu feedback..." class="input-field mb-4"></textarea>
-                <button onclick="saveReview()" class="btn-primary px-8 py-3 rounded-xl font-bold">Publicar</button>
+                <div class="flex gap-4">
+                    <div class="w-1/2">
+                        <label class="text-xs">VALIDADE</label>
+                        <input type="text" placeholder="12/30" class="input-field">
+                    </div>
+                    <div class="w-1/2">
+                        <label class="text-xs">CVV</label>
+                        <input type="text" placeholder="123" class="input-field">
+                    </div>
+                </div>
+                <button onclick="finalizarCompra()" id="btn-finalizar" class="btn-primary w-full py-4 rounded-xl mt-4">CONFIRMAR PAGAMENTO (R$ <span id="pag-total">0</span>)</button>
             </div>
-            <div id="reviews-display" class="grid gap-4"></div>
         </div>
-    </section>
+    </div>
 
-    <!-- Carrinho & Pagamento -->
-    <div id="cart-modal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-6">
-        <div class="glass-card p-8 rounded-3xl w-full max-w-md relative">
-            <h2 class="text-2xl font-bold mb-6">Resumo do Pedido</h2>
-            <div id="cart-list" class="max-h-60 overflow-y-auto mb-6"></div>
-            <div class="text-xl font-bold border-t border-white/10 pt-4 flex justify-between">
-                <span>Total:</span> <span id="cart-total">R$ 0,00</span>
+    <!-- MODAL 3: SUCESSO -->
+    <div id="modal-sucesso" class="modal-overlay">
+        <div class="glass p-10 text-center w-full max-w-md">
+            <div class="text-6xl mb-4">✅</div>
+            <h2 class="text-3xl font-bold mb-2 text-green-400">Pagamento Aprovado!</h2>
+            <p class="opacity-70 mb-6">Sua compra foi processada com sucesso no ambiente de teste.</p>
+            <div class="bg-white/5 p-4 rounded-lg text-left text-sm mb-6">
+                <p><b>Pedido:</b> #<span id="pedido-id"></span></p>
+                <p><b>Status:</b> Simulação Concluída</p>
             </div>
-            <button onclick="sendOrder()" class="w-full bg-green-600 py-4 rounded-xl font-bold mt-6 hover:bg-green-500 transition">Finalizar via WhatsApp</button>
-            <button onclick="toggleCart()" class="w-full mt-4 text-white/50 text-sm">Continuar Comprando</button>
+            <button onclick="location.reload()" class="btn-primary px-8 py-3 rounded-xl">VOLTAR AO INÍCIO</button>
         </div>
     </div>
 
     <script>
-        let cart = [];
-        let stars = 0;
+        let carrinho = [];
 
-        function addToCart(name, price) {
-            cart.push({name, price});
-            document.getElementById('cart-count').innerText = cart.length;
-            alert(name + " adicionado!");
+        function add(preco, nome) {
+            carrinho.push({nome, preco});
+            document.getElementById('cart-count').innerText = carrinho.length;
+            alert(nome + " adicionado!");
         }
 
-        function toggleCart() {
-            const modal = document.getElementById('cart-modal');
-            modal.classList.toggle('hidden');
-            const list = document.getElementById('cart-list');
+        function abrirCarrinho() {
+            const lista = document.getElementById('lista-carrinho');
             let total = 0;
-            list.innerHTML = cart.map(i => {
-                total += i.price;
-                return `<div class="flex justify-between py-2"><span>${i.name}</span><span>R$ ${i.price.toFixed(2)}</span></div>`;
+            lista.innerHTML = carrinho.map(i => {
+                total += i.preco;
+                return `<div class="flex justify-between"><span>${i.nome}</span><b>R$ ${i.preco.toFixed(2)}</b></div>`;
             }).join('');
-            document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2)}`;
+            document.getElementById('total-val').innerText = "R$ " + total.toFixed(2);
+            document.getElementById('modal-carrinho').style.display = 'flex';
         }
 
-        function sendOrder() {
-            if(cart.length === 0) return alert("Adicione itens primeiro!");
-            let text = "*Novo Pedido Body Coffee*%0A%0A";
-            cart.forEach(i => text += `- ${i.name}: R$ ${i.price.toFixed(2)}%0A`);
-            text += `%0A*Total: ${document.getElementById('cart-total').innerText}*`;
-            window.open(`https://wa.me{text}`); // TROQUE O NÚMERO AQUI
+        function fecharModais() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
         }
 
-        function setStars(n) {
-            stars = n;
-            const s = document.getElementById('star-rating').children;
-            for(let i=0; i<5; i++) s[i].style.color = i < n ? '#facc15' : '#4b5563';
+        function irParaPagamento() {
+            if(carrinho.length === 0) return alert("Carrinho vazio!");
+            let total = document.getElementById('total-val').innerText;
+            document.getElementById('pag-total').innerText = total;
+            fecharModais();
+            document.getElementById('modal-pagamento').style.display = 'flex';
         }
 
-        function saveReview() {
-            const n = document.getElementById('rev-name').value;
-            const t = document.getElementById('rev-text').value;
-            if(!n || !t || stars === 0) return alert("Preencha tudo!");
-            const rev = { n, t, stars, d: new Date().toLocaleDateString() };
-            let revs = JSON.parse(localStorage.getItem('reviews') || '[]');
-            revs.unshift(rev);
-            localStorage.setItem('reviews', JSON.stringify(revs));
-            renderReviews();
-            document.getElementById('rev-name').value = '';
-            document.getElementById('rev-text').value = '';
-            setStars(0);
-        }
+        function finalizarCompra() {
+            const btn = document.getElementById('btn-finalizar');
+            btn.innerText = "Processando...";
+            btn.disabled = true;
 
-        function renderReviews() {
-            const display = document.getElementById('reviews-display');
-            const revs = JSON.parse(localStorage.getItem('reviews') || '[]');
-            display.innerHTML = revs.map(r => `
-                <div class="glass-card p-6 rounded-xl border-l-4 border-coffee-orange">
-                    <div class="flex justify-between font-bold"><span>${r.n}</span><span class="text-yellow-500">${'★'.repeat(r.stars)}</span></div>
-                    <p class="opacity-80 mt-2">${r.t}</p>
-                </div>
-            `).join('');
+            // Simula delay do banco
+            setTimeout(() => {
+                fecharModais();
+                document.getElementById('pedido-id').innerText = Math.floor(Math.random() * 999999);
+                document.getElementById('modal-sucesso').style.display = 'flex';
+            }, 2000);
         }
-        window.onload = renderReviews;
     </script>
 </body>
 </html>
