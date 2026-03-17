@@ -1,299 +1,91 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR" class="h-full">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Body Coffee</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Poppins:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
- </head>
- <body class="font-body scroll-smooth h-full overflow-x-hidden overflow-y-auto" style="background: linear-gradient(135deg, #1e1e2f, #2b1d18);">
-  <!-- Navigation -->
-  <nav class="fixed top-0 left-0 right-0 z-50 glass-card" id="navbar">
-   <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-    <a href="#hero" class="flex items-center gap-2"> <span class="text-3xl">☕</span> <span id="nav-brand" class="font-display text-xl font-bold text-white">Body Coffee</span> </a>
-    <div class="hidden md:flex items-center gap-8">
-     <a href="#hero" class="nav-link text-white/80 hover:text-white transition-colors">Início</a> <a href="#numeros" class="nav-link text-white/80 hover:text-white transition-colors">Números</a> <a href="#cardapio" class="nav-link text-white/80 hover:text-white transition-colors">Cardápio</a> <a href="#historia" class="nav-link text-white/80 hover:text-white transition-colors">História</a> <a href="#carrinho" class="nav-link text-white/80 hover:text-white transition-colors">Carrinho</a> <a href="#avaliacoes" class="nav-link text-white/80 hover:text-white transition-colors">Avaliações</a> <a href="#contato" class="nav-link text-white/80 hover:text-white transition-colors">Contato</a>
-    </div><button id="mobile-menu-btn" class="md:hidden text-white text-2xl">☰</button>
-   </div><!-- Mobile Menu -->
-   <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
-    <div class="flex flex-col gap-4">
-     <a href="#hero" class="text-white/80 hover:text-white transition-colors">Início</a> <a href="#numeros" class="text-white/80 hover:text-white transition-colors">Números</a> <a href="#cardapio" class="text-white/80 hover:text-white transition-colors">Cardápio</a> <a href="#historia" class="text-white/80 hover:text-white transition-colors">História</a> <a href="#carrinho" class="text-white/80 hover:text-white transition-colors">Carrinho</a> <a href="#avaliacoes" class="text-white/80 hover:text-white transition-colors">Avaliações</a> <a href="#contato" class="text-white/80 hover:text-white transition-colors">Contato</a>
-    </div>
-   </div>
-  </nav><!-- Hero Section -->
-  <section id="hero" class="min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden px-6" style="background: radial-gradient(ellipse at top, #ff7b54 0%, #2b1d18 70%);">
-   <!-- Floating Coffee Beans -->
-   <div class="absolute inset-0 pointer-events-none overflow-hidden">
-    <div class="absolute top-20 left-10 text-4xl animate-float" style="animation-delay: 0s;">
-     🫘
-    </div>
-    <div class="absolute top-40 right-20 text-3xl animate-float" style="animation-delay: 1s;">
-     🫘
-    </div>
-    <div class="absolute bottom-40 left-20 text-5xl animate-float" style="animation-delay: 2s;">
-     🫘
-    </div>
-    <div class="absolute bottom-20 right-10 text-4xl animate-float" style="animation-delay: 0.5s;">
-     🫘
-    </div>
-    <div class="absolute top-60 left-1/4 text-2xl animate-float" style="animation-delay: 1.5s;">
-     ✨
-    </div>
-    <div class="absolute top-32 right-1/3 text-2xl animate-float" style="animation-delay: 2.5s;">
-     ✨
-    </div>
-   </div><!-- Coffee Cup Icon with Steam -->
-   <div class="relative mb-8">
-    <div class="steam-container flex gap-2">
-     <div class="steam animate-steam" style="animation-delay: 0s;"></div>
-     <div class="steam animate-steam" style="animation-delay: 0.4s;"></div>
-     <div class="steam animate-steam" style="animation-delay: 0.8s;"></div>
-    </div><span class="text-8xl">☕</span>
-   </div>
-   <h1 id="hero-title" class="font-display text-5xl md:text-7xl font-bold text-white animate-glow mb-4">Body Coffee</h1>
-   <p id="hero-tagline" class="text-xl md:text-2xl text-white/80 mb-8 max-w-lg">O café mais instagramável da cidade</p>
-   <div class="flex flex-col sm:flex-row gap-4">
-    <a href="#cardapio" class="btn-primary px-8 py-4 rounded-full text-white font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/30"> Ver Cardápio </a> <a href="#contato" class="px-8 py-4 rounded-full border-2 border-white/30 text-white font-semibold text-lg transition-all duration-300 hover:bg-white/10 hover:border-white/50"> Fale Conosco </a>
-   </div><!-- Scroll Indicator -->
-   <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-    <a href="#numeros" class="text-white/60 hover:text-white transition-colors">
-     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-     </svg></a>
-   </div>
-  </section><!-- Numbers Section -->
-  <section id="numeros" class="py-24 px-6">
-   <div class="max-w-6xl mx-auto">
-    <h2 class="font-display text-4xl md:text-5xl font-bold text-center mb-4"><span class="gradient-text">🔥 Nossos Números</span></h2>
-    <p class="text-white/60 text-center mb-16 text-lg">Resultados que falam por si</p>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-     <div class="glass-card rounded-3xl p-8 text-center transition-all duration-300 hover:scale-105">
-      <div class="text-5xl mb-4">
-       ☕
-      </div>
-      <p class="text-4xl md:text-5xl font-bold text-coffee-gold mb-2" id="counter-cafes">0</p>
-      <p class="text-white/70 text-lg">Cafés Servidos</p>
-     </div>
-     <div class="glass-card rounded-3xl p-8 text-center transition-all duration-300 hover:scale-105">
-      <div class="text-5xl mb-4">
-       😊
-      </div>
-      <p class="text-4xl md:text-5xl font-bold text-coffee-gold mb-2" id="counter-clientes">0</p>
-      <p class="text-white/70 text-lg">Clientes Felizes</p>
-     </div>
-     <div class="glass-card rounded-3xl p-8 text-center transition-all duration-300 hover:scale-105">
-      <div class="text-5xl mb-4">
-       📸
-      </div>
-      <p class="text-4xl md:text-5xl font-bold text-coffee-gold mb-2" id="counter-fotos">0</p>
-      <p class="text-white/70 text-lg">Fotos no Instagram</p>
-     </div>
-    </div>
-   </div>
-  </section><!-- Story Section -->
-  <section id="historia" class="py-24 px-6" style="background: linear-gradient(180deg, rgba(255,123,84,0.1), transparent);">
-   <div class="max-w-6xl mx-auto">
-    <h2 class="font-display text-4xl md:text-5xl font-bold text-center mb-4"><span class="gradient-text">👥 Nossa História</span></h2>
-    <p class="text-white/60 text-center mb-16 text-lg">Como tudo começou com 5 amigos e muito café</p><!-- Story Timeline -->
-    <div class="mb-16">
-     <div class="glass-card rounded-2xl p-8 mb-8">
-      <div class="flex flex-col md:flex-row items-start gap-8">
-       <div class="md:w-1/3">
-        <div class="text-6xl mb-4">
-         ☕
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Coffee</title>
+    
+    <!-- Scripts Externos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com"></script>
+    
+    <!-- Fontes -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    
+    <!-- Link para o CSS Externo -->
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coffee: {
+                            dark: '#1e1e2f',
+                            brown: '#2b1d18',
+                            orange: '#ff7b54',
+                            fire: '#ff5722',
+                            gold: '#ffb400'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-body scroll-smooth h-full overflow-x-hidden overflow-y-auto main-gradient">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-card" id="navbar">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-2">
+                <span class="text-3xl">☕</span>
+                <span id="nav-brand" class="font-display text-xl font-bold text-white">Body Coffee</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#hero" class="nav-link text-white/80 hover:text-white transition-colors">Início</a>
+                <a href="#numeros" class="nav-link text-white/80 hover:text-white transition-colors">Números</a>
+                <a href="#cardapio" class="nav-link text-white/80 hover:text-white transition-colors">Cardápio</a>
+                <a href="#historia" class="nav-link text-white/80 hover:text-white transition-colors">História</a>
+                <a href="#carrinho" class="nav-link text-white/80 hover:text-white transition-colors">Carrinho</a>
+                <a href="#avaliacoes" class="nav-link text-white/80 hover:text-white transition-colors">Avaliações</a>
+                <a href="#contato" class="nav-link text-white/80 hover:text-white transition-colors">Contato</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden text-white text-2xl">☰</button>
         </div>
-        <h3 class="font-display text-2xl font-semibold text-coffee-gold mb-3">O Começo</h3>
-        <p class="text-white/80">Em 2018, cinco amigos se reuniram em um pequeno apartamento com uma missão: criar o melhor café da cidade. O que começou como um hobby virou obsessão e, logo depois, uma paixão compartilhada.</p>
-       </div>
-       <div class="md:w-2/3">
-        <p class="text-white/70 leading-relaxed">Cada um trouxe sua expertise: João com conhecimento em torra, Maria com paixão por Design, Pedro como gerente, Ana com talento em atendimento e Carlos dominando a parte financeira. Juntos, criaram algo especial que ia além de apenas servir café.</p>
-       </div>
-      </div>
-     </div>
-     <div class="glass-card rounded-2xl p-8 mb-8">
-      <div class="flex flex-col md:flex-row items-start gap-8">
-       <div class="md:w-1/3 order-2 md:order-1">
-        <p class="text-white/70 leading-relaxed">A primeira loja Body Coffee abriu em 2019 em um espaço pequeno, mas aconchegante. A combinação de café excepcional com uma experiência visual memorável conquistou o bairro. Cada detalhe era pensado, desde a xícara até o atendimento.</p>
-       </div>
-       <div class="md:w-2/3 order-1 md:order-2">
-        <div class="text-6xl mb-4">
-         🏪
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden px-6">
+        <!-- Floating Coffee Beans -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <div class="absolute top-20 left-10 text-4xl animate-float" style="animation-delay: 0s;">🫘</div>
+            <div class="absolute top-40 right-20 text-3xl animate-float" style="animation-delay: 1s;">🫘</div>
+            <div class="absolute bottom-40 left-20 text-5xl animate-float" style="animation-delay: 2s;">🫘</div>
+            <div class="absolute bottom-20 right-10 text-4xl animate-float" style="animation-delay: 0.5s;">🫘</div>
         </div>
-        <h3 class="font-display text-2xl font-semibold text-coffee-gold mb-3">Primeira Loja</h3>
-        <p class="text-white/80">O café logo virou point obrigatório para quem quer um bom espresso e uma experiência instagramável. As fotos viralizaram nas redes sociais e mais clientes chegavam a cada dia.</p>
-       </div>
-      </div>
-     </div>
-     <div class="glass-card rounded-2xl p-8 mb-8">
-      <div class="flex flex-col md:flex-row items-start gap-8">
-       <div class="md:w-1/3">
-        <div class="text-6xl mb-4">
-         🌟
+
+        <div class="relative mb-8">
+            <div class="steam-container flex gap-2">
+                <div class="steam animate-steam" style="animation-delay: 0s;"></div>
+                <div class="steam animate-steam" style="animation-delay: 0.4s;"></div>
+                <div class="steam animate-steam" style="animation-delay: 0.8s;"></div>
+            </div>
+            <span class="text-8xl">☕</span>
         </div>
-        <h3 class="font-display text-2xl font-semibold text-coffee-gold mb-3">Expansão</h3>
-        <p class="text-white/80">Com o sucesso, novos pontos foram abertos. Mas mantemos sempre a mesma essência: qualidade premium, ambiente acolhedor e equipe apaixonada pelo que faz.</p>
-       </div>
-       <div class="md:w-2/3">
-        <p class="text-white/70 leading-relaxed">Hoje, Body Coffee é mais que um café. É um movimento. Uma comunidade de pessoas que entendem que um bom café é arte, que a apresentação importa e que cada xícara merece ser apreciada e fotografada. Somos os 5 amigos de sempre, só que agora com uma família muito maior ao redor.</p>
-       </div>
-      </div>
-     </div>
-    </div><!-- Team Section -->
-    <div class="mt-20">
-     <h3 class="font-display text-3xl font-semibold text-center text-white mb-12">Os Fundadores</h3>
-     <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
-      <!-- João -->
-      <div class="glass-card rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105">
-       <div class="text-5xl mb-4">
-        😊
-       </div>
-       <h4 class="font-display text-lg font-semibold text-white mb-1">João</h4>
-       <p class="text-coffee-gold text-sm font-medium mb-3">Especialista em Torra</p>
-       <p class="text-white/60 text-sm">Mestre em café, busca a perfeição em cada grão</p>
-      </div><!-- Luiz -->
-      <div class="glass-card rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105">
-       <div class="text-5xl mb-4">
-        ✨
-       </div>
-       <h4 class="font-display text-lg font-semibold text-white mb-1">Luiz</h4>
-       <p class="text-coffee-gold text-sm font-medium mb-3">Designer</p>
-       <p class="text-white/60 text-sm">Traz a magia visual que faz você querer fotografar</p>
-      </div><!-- Vinícius -->
-      <div class="glass-card rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105">
-       <div class="text-5xl mb-4">
-        📊
-       </div>
-       <h4 class="font-display text-lg font-semibold text-white mb-1">Vinícius</h4>
-       <p class="text-coffee-gold text-sm font-medium mb-3">Gerente Geral</p>
-       <p class="text-white/60 text-sm">Organiza e alinha o que faz o time funcionar</p>
-      </div><!-- Maria -->
-      <div class="glass-card rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105">
-       <div class="text-5xl mb-4">
-        💖
-       </div>
-       <h4 class="font-display text-lg font-semibold text-white mb-1">Maria</h4>
-       <p class="text-coffee-gold text-sm font-medium mb-3">Atendimento</p>
-       <p class="text-white/60 text-sm">Faz cada cliente se sentir em casa</p>
-      </div><!-- Marjorie -->
-      <div class="glass-card rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105">
-       <div class="text-5xl mb-4">
-        💼
-       </div>
-       <h4 class="font-display text-lg font-semibold text-white mb-1">Marjorie</h4>
-       <p class="text-coffee-gold text-sm font-medium mb-3">Financeiro</p>
-       <p class="text-white/60 text-sm">Garante que o sonho continue crescendo</p>
-      </div>
-     </div>
-    </div>
-   </div>
-  </section><!-- Menu Section -->
-  <section id="cardapio" class="py-24 px-6" style="background: linear-gradient(180deg, transparent, rgba(255,123,84,0.1), transparent);">
-   <div class="max-w-6xl mx-auto">
-    <h2 id="menu-section-title" class="font-display text-4xl md:text-5xl font-bold text-center mb-4"><span class="gradient-text">📋 Nosso Cardápio</span></h2>
-    <p class="text-white/60 text-center mb-16 text-lg">Sabores únicos para momentos especiais</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
-      <div class="flex justify-between items-start mb-4">
-       <span class="text-4xl">☕</span> <span class="bg-coffee-orange/20 text-coffee-orange px-3 py-1 rounded-full text-sm font-medium">Popular</span>
-      </div>
-      <h3 class="font-display text-xl font-semibold text-white mb-2">Espresso Clássico</h3>
-      <p class="text-white/60 text-sm mb-4">Shot puro de café premium, intenso e aromático</p>
-      <p class="text-coffee-gold font-bold text-xl">R$ 8,00</p>
-     </div>
-     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
-      <div class="flex justify-between items-start mb-4">
-       <span class="text-4xl">🥛</span> <span class="bg-coffee-gold/20 text-coffee-gold px-3 py-1 rounded-full text-sm font-medium">Favorito</span>
-      </div>
-      <h3 class="font-display text-xl font-semibold text-white mb-2">Cappuccino Body</h3>
-      <p class="text-white/60 text-sm mb-4">Espresso com leite vaporizado e espuma cremosa</p>
-      <p class="text-coffee-gold font-bold text-xl">R$ 14,00</p>
-     </div>
-     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
-      <div class="flex justify-between items-start mb-4">
-       <span class="text-4xl">🍫</span>
-      </div>
-      <h3 class="font-display text-xl font-semibold text-white mb-2">Mocha Especial</h3>
-      <p class="text-white/60 text-sm mb-4">Café com chocolate belga e chantilly artesanal</p>
-      <p class="text-coffee-gold font-bold text-xl">R$ 18,00</p>
-     </div>
-     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
-      <div class="flex justify-between items-start mb-4">
-       <span class="text-4xl">🧊</span> <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm font-medium">Refrescante</span>
-      </div>
-      <h3 class="font-display text-xl font-semibold text-white mb-2">Cold Brew</h3>
-      <p class="text-white/60 text-sm mb-4">Café extraído a frio por 24h, suave e equilibrado</p>
-      <p class="text-coffee-gold font-bold text-xl">R$ 16,00</p>
-     </div>
-     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
-      <div class="flex justify-between items-start mb-4">
-       <span class="text-4xl">🍦</span>
-      </div>
-      <h3 class="font-display text-xl font-semibold text-white mb-2">Affogato</h3>
-      <p class="text-white/60 text-sm mb-4">Espresso quente sobre gelato de baunilha</p>
-      <p class="text-coffee-gold font-bold text-xl">R$ 22,00</p>
-     </div>
-     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
-      <div class="flex justify-between items-start mb-4">
-       <span class="text-4xl">🌿</span> <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-medium">Vegano</span>
-      </div>
-      <h3 class="font-display text-xl font-semibold text-white mb-2">Latte de Aveia</h3>
-      <p class="text-white/60 text-sm mb-4">Espresso com leite de aveia orgânico cremoso</p>
-      <p class="text-coffee-gold font-bold text-xl">R$ 16,00</p>
-     </div>
-    </div>
-   </div>
-  </section><!-- Shopping Cart Section -->
-  <section id="carrinho" class="py-24 px-6" style="background: linear-gradient(180deg, rgba(255,123,84,0.1), transparent);">
-   <div class="max-w-6xl mx-auto">
-    <h2 class="font-display text-4xl md:text-5xl font-bold text-center mb-4"><span class="gradient-text">🛒 Seu Carrinho</span></h2>
-    <p class="text-white/60 text-center mb-16 text-lg">Adicione itens do cardápio para comprar</p>
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8"><!-- Menu Items for Cart -->
-     <div class="lg:col-span-2">
-      <div class="glass-card rounded-2xl p-8 mb-8">
-       <h3 class="font-display text-2xl font-semibold text-white mb-6">Selecione seus Itens</h3>
-       <div id="menu-for-cart" class="grid grid-cols-1 md:grid-cols-2 gap-4"><!-- Menu items will be populated here -->
-       </div>
-      </div>
-     </div><!-- Cart Summary -->
-     <div class="lg:col-span-1">
-      <div class="glass-card rounded-2xl p-8 sticky top-24">
-       <h3 class="font-display text-2xl font-semibold text-white mb-6">Resumo</h3>
-       <div id="cart-items-list" class="space-y-3 mb-6 max-h-64 overflow-y-auto">
-        <p class="text-white/60 text-center py-4">Nenhum item adicionado</p>
-       </div>
-       <div class="border-t border-white/20 pt-4 pb-6">
-        <div class="flex justify-between items-center mb-2"><span class="text-white/70">Subtotal:</span> <span class="text-white font-semibold" id="subtotal">R$ 0,00</span>
+
+        <h1 id="hero-title" class="font-display text-5xl md:text-7xl font-bold text-white animate-glow mb-4">Body Coffee</h1>
+        <p id="hero-tagline" class="text-xl md:text-2xl text-white/80 mb-8 max-w-lg">O café mais instagramável da cidade</p>
+        
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#cardapio" class="btn-primary px-8 py-4 rounded-full text-white font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/30">
+                Ver Cardápio
+            </a>
+            <a href="#contato" class="px-8 py-4 border border-white/30 rounded-full text-white font-semibold text-lg hover:bg-white/10 transition-all">
+                Contato
+            </a>
         </div>
-        <div class="flex justify-between items-center"><span class="text-white/70">Taxa:</span> <span class="text-white font-semibold" id="tax">R$ 0,00</span>
-        </div>
-       </div>
-       <div class="border-t border-white/20 pt-4 mb-6">
-        <div class="flex justify-between items-center mb-4"><span class="text-white font-semibold">Total:</span> <span class="text-2xl font-bold text-coffee-gold" id="total">R$ 0,00</span>
-        </div>
-       </div><button id="checkout-btn" class="w-full btn-primary py-3 rounded-lg text-white font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled> Prosseguir </button>
-      </div>
-     </div>
-    </div>
-   </div>
-  </section><!-- Checkout Modal -->
-  <div id="checkout-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4" style="background: rgba(0,0,0,0.8);">
-   <div class="glass-card rounded-2xl p-8 max-w-md w-full max-h-96 overflow-y-auto">
-    <div class="flex justify-between items-center mb-6">
-     <h2 class="font-display text-2xl font-semibold text-white">Finalizar Compra</h2><button id="close-modal" class="text-white/60 hover:text-white text-2xl">✕</button>
-    </div>
-    <form id="checkout-form">
-     <div class="mb-4"><label for="customer-name" class="block text-white font-medium mb-2">Nome Completo</label> <input type="text" id="customer-name" placeholder="Seu nome" class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-coffee-orange transition-colors" required>
-     </div>
-     <div class="mb-4"><label for="customer-email" class="block text-white font-medium mb-2">E-mail</label> <input type="email" id="customer-email" placeholder="seu@email.com" class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-coffee-orange transition-colors" required>
-     </div>
-     <div class="mb-6"><label for="payment-method" class="block text-white font-medium mb-2">Método de Pagamento</label> <select id="payment-method" class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-coffee-orange transition-colors"> <option value="credit_card">💳 Cartão de Crédito</option> <option value="pix">📱 PIX</option> <option value="debit">🏦 Débito</option> <option value="cash">💵 Dinheiro</option> </select>
-     </div>
-     <div id="pix-container" class="hidden mb-6 p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
-      <p class="text-white font-medium mb-4 text-center">Escaneie o QR Code para pagar com PIX</p>
-      <div id="qrcode" class="flex justify-center mb-4 p-4 bg-white rounded-lg" style="width: 100%; display: flex; justify-content: center;"></div>
-      <p class="text-white/70 text-xs text-center mb
+    </section>
+
+</body>
+</html>
