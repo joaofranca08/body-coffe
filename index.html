@@ -4,87 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Body Coffee | O Café Mais Instagramável</title>
-    
-    <!-- Tailwind & QRCode via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com"></script>
-    
-    <!-- Fontes -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    
-    <!-- Arquivo CSS Local -->
     <link rel="stylesheet" href="style.css">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        coffee: { dark: '#1e1e2f', brown: '#2b1d18', orange: '#ff7b54', fire: '#ff5722', gold: '#ffb400' }
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="font-body scroll-smooth h-full overflow-x-hidden overflow-y-auto main-gradient text-white">
+<body class="font-body scroll-smooth h-full overflow-x-hidden main-gradient text-white">
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass-card" id="navbar">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="#hero" class="flex items-center gap-2">
-                <span class="text-3xl">☕</span>
-                <span class="font-display text-xl font-bold">Body Coffee</span>
-            </a>
-            <div class="hidden md:flex items-center gap-8">
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-card">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#hero" class="font-display text-xl font-bold">☕ Body Coffee</a>
+            <div class="hidden md:flex gap-8">
                 <a href="#hero" class="nav-link">Início</a>
-                <a href="#cardapio" class="nav-link">Cardápio</a>
+                <a href="#avaliacoes" class="nav-link">Avaliações</a>
                 <a href="#contato" class="nav-link">Contato</a>
             </div>
-            <button id="mobile-menu-btn" class="md:hidden text-2xl">☰</button>
-        </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 bg-coffee-brown/95">
-            <div class="flex flex-col gap-4 py-4">
-                <a href="#hero">Início</a>
-                <a href="#cardapio">Cardápio</a>
-                <a href="#contato">Contato</a>
-            </div>
+            <button id="menu-toggle" class="md:hidden">☰</button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero-section min-h-screen flex flex-col justify-center items-center text-center relative px-6">
-        <!-- Floating Elements -->
-        <div class="absolute inset-0 pointer-events-none">
-            <div class="absolute top-20 left-10 text-4xl animate-float" style="animation-delay: 0s;">🫘</div>
-            <div class="absolute top-40 right-20 text-3xl animate-float" style="animation-delay: 1s;">🫘</div>
-            <div class="absolute bottom-20 right-10 text-4xl animate-float" style="animation-delay: 0.5s;">🫘</div>
-        </div>
+    <!-- Hero -->
+    <section id="hero" class="hero-section min-h-screen flex flex-col justify-center items-center text-center px-6">
+        <h1 class="font-display text-6xl font-bold animate-glow mb-4">Body Coffee</h1>
+        <p class="text-xl text-white/80">Experiência única em cada xícara.</p>
+    </section>
 
-        <div class="relative mb-8">
-            <div class="steam-container flex gap-2">
-                <div class="steam animate-steam" style="animation-delay: 0s;"></div>
-                <div class="steam animate-steam" style="animation-delay: 0.4s;"></div>
-                <div class="steam animate-steam" style="animation-delay: 0.8s;"></div>
+    <!-- Seção Avaliações -->
+    <section id="avaliacoes" class="py-20 px-6 max-w-6xl mx-auto">
+        <h2 class="font-display text-4xl text-center mb-12">O que dizem nossos clientes</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="glass-card p-6 rounded-2xl">
+                <p class="italic">"O café é maravilhoso e o ambiente é perfeito para fotos!"</p>
+                <span class="block mt-4 font-bold text-coffee-orange">- Ana Silva</span>
             </div>
-            <span class="text-8xl">☕</span>
-        </div>
-
-        <h1 class="font-display text-5xl md:text-7xl font-bold animate-glow mb-4">Body Coffee</h1>
-        <p class="text-xl md:text-2xl text-white/80 mb-8 max-w-lg">O café mais instagramável da cidade</p>
-        
-        <div class="flex flex-col sm:flex-row gap-4">
-            <a href="#cardapio" class="btn-primary px-8 py-4 rounded-full font-semibold text-lg hover:scale-105 transition-all">
-                Ver Cardápio
-            </a>
-            <a href="#contato" class="px-8 py-4 border border-white/30 rounded-full font-semibold text-lg hover:bg-white/10 transition-all">
-                Falar Conosco
-            </a>
+            <div class="glass-card p-6 rounded-2xl">
+                <p class="italic">"Melhor Capuccino da cidade. Atendimento nota 10."</p>
+                <span class="block mt-4 font-bold text-coffee-orange">- Pedro Santos</span>
+            </div>
+            <div class="glass-card p-6 rounded-2xl">
+                <p class="italic">"Lugar aconchegante e o bolo de cenoura é divino."</p>
+                <span class="block mt-4 font-bold text-coffee-orange">- Julia Lima</span>
+            </div>
         </div>
     </section>
 
-    <!-- Script Local -->
+    <!-- Seção Contato -->
+    <section id="contato" class="py-20 px-6 bg-black/20">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="font-display text-4xl mb-8">Fale Conosco</h2>
+            <form id="form-contato" class="grid gap-4">
+                <input type="text" placeholder="Seu Nome" class="p-4 rounded-lg bg-white/10 border border-white/20 outline-none focus:border-coffee-orange">
+                <input type="email" placeholder="Seu E-mail" class="p-4 rounded-lg bg-white/10 border border-white/20 outline-none focus:border-coffee-orange">
+                <textarea placeholder="Sua Mensagem" rows="4" class="p-4 rounded-lg bg-white/10 border border-white/20 outline-none focus:border-coffee-orange"></textarea>
+                <button type="submit" class="btn-primary py-4 rounded-lg font-bold">Enviar Mensagem</button>
+            </form>
+        </div>
+    </section>
+
     <script src="script.js"></script>
 </body>
 </html>
