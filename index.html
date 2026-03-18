@@ -1,164 +1,1128 @@
 <!doctype html>
-<html lang="pt-BR">
-<head>
+<html lang="pt-BR" class="h-full">
+ <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Body Coffee</title>
-
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- CSS externo -->
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-<h1 class="text-4xl mb-6 text-center">☕ Body Coffee</h1>
-
-<!-- CARDÁPIO -->
-<div class="grid md:grid-cols-3 gap-4 mb-10">
-
-  <div class="glass">
-    <h2>Espresso</h2>
-    <p>R$ 8</p>
-    <button class="btn" onclick="addToCart('Espresso',8)">+</button>
-  </div>
-
-  <div class="glass">
-    <h2>Cappuccino</h2>
-    <p>R$ 14</p>
-    <button class="btn" onclick="addToCart('Cappuccino',14)">+</button>
-  </div>
-
-  <div class="glass">
-    <h2>Mocha</h2>
-    <p>R$ 18</p>
-    <button class="btn" onclick="addToCart('Mocha',18)">+</button>
-  </div>
-
-</div>
-
-<!-- CARRINHO -->
-<div class="glass mb-10">
-  <h2 class="text-2xl mb-4">🛒 Carrinho</h2>
-  <div id="cart-items"></div>
-  <p class="mt-4">Total: <span id="total">R$ 0</span></p>
-  <button class="btn mt-4" onclick="checkout()">Finalizar Pedido</button>
-</div>
-
-<!-- AVALIAÇÕES -->
-<div class="glass mb-10">
-  <h2 class="text-2xl mb-4">⭐ Avaliações</h2>
-
-  <form id="review-form" class="mb-4">
-    <input id="name" placeholder="Nome" class="text-black p-2 w-full mb-2">
-    <input id="rating" type="number" max="5" min="1" placeholder="Nota (1-5)" class="text-black p-2 w-full mb-2">
-    <textarea id="comment" placeholder="Comentário" class="text-black p-2 w-full mb-2"></textarea>
-    <button class="btn w-full">Enviar</button>
-  </form>
-
-  <p>Média: <span id="avg">0.0</span></p>
-  <div id="reviews"></div>
-</div>
-
-<script>
-// ================= STORAGE =================
-function get(key){
-  return JSON.parse(localStorage.getItem(key)) || []
-}
-
-function set(key,data){
-  localStorage.setItem(key, JSON.stringify(data))
-}
-
-// ================= CARRINHO =================
-let cart = []
-
-function addToCart(name,price){
-  cart.push({name,price})
-  renderCart()
-}
-
-function renderCart(){
-  const el = document.getElementById("cart-items")
-  el.innerHTML = ""
-
-  let total = 0
-
-  cart.forEach(item=>{
-    total += item.price
-    el.innerHTML += `<p>${item.name} - R$ ${item.price}</p>`
-  })
-
-  document.getElementById("total").innerText = "R$ "+total.toFixed(2)
-}
-
-function checkout(){
-  let orders = get("orders")
-  orders.push(cart)
-  set("orders",orders)
-
-  alert("Pedido realizado!")
-
-  cart = []
-  renderCart()
-}
-
-// ================= AVALIAÇÕES =================
-let reviews = get("reviews")
-
-function renderReviews(){
-  const el = document.getElementById("reviews")
-  el.innerHTML = ""
-
-  if(reviews.length === 0){
-    el.innerHTML = "<p>Sem avaliações ainda</p>"
-    return
-  }
-
-  reviews.forEach((r,i)=>{
-    el.innerHTML += `
-      <div class="mt-2">
-        <strong>${r.name}</strong> (${r.rating}⭐)
-        <p>${r.comment}</p>
-        <button onclick="del(${i})">❌</button>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Poppins:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    html, body { height: 100%; margin: 0; }
+    
+    .font-display { font-family: 'Playfair Display', serif; }
+    .font-body { font-family: 'Poppins', sans-serif; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { 
+        text-shadow: 0 0 5px #fff, 0 0 10px #ff7b54, 0 0 20px #ff5722, 0 0 40px #ff3d00;
+      }
+      50% { 
+        text-shadow: 0 0 10px #fff, 0 0 20px #ff7b54, 0 0 40px #ff5722, 0 0 60px #ff3d00, 0 0 80px #ff3d00;
+      }
+    }
+    
+    @keyframes steam {
+      0% { transform: translateY(0) scaleX(1); opacity: 0.6; }
+      50% { transform: translateY(-15px) scaleX(1.2); opacity: 0.3; }
+      100% { transform: translateY(-30px) scaleX(0.8); opacity: 0; }
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes countUp {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .animate-float { animation: float 6s ease-in-out infinite; }
+    .animate-glow { animation: pulse-glow 3s ease-in-out infinite; }
+    .animate-steam { animation: steam 2s ease-out infinite; }
+    .animate-slide-up { animation: slideUp 0.8s ease-out forwards; }
+    .animate-count { animation: countUp 0.5s ease-out forwards; }
+    
+    .steam-container {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .steam {
+      width: 8px;
+      height: 20px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 50%;
+      filter: blur(3px);
+    }
+    
+    .glass-card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .menu-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(255,123,84,0.2);
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #ff7b54, #ffb400);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #ff7b54, #ffb400);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #ff7b54, #ff5722);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+    
+    .scroll-smooth {
+      scroll-behavior: smooth;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            coffee: {
+              dark: '#1e1e2f',
+              brown: '#2b1d18',
+              orange: '#ff7b54',
+              fire: '#ff5722',
+              gold: '#ffb400'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="font-body scroll-smooth h-full overflow-x-hidden overflow-y-auto" style="background: linear-gradient(135deg, #1e1e2f, #2b1d18);">
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 glass-card" id="navbar">
+   <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="#hero" class="flex items-center gap-2"> <span class="text-3xl">☕</span> <span id="nav-brand" class="font-display text-xl font-bold text-white">Body Coffee</span> </a>
+    <div class="hidden md:flex items-center gap-8">
+     <a href="#hero" class="nav-link text-white/80 hover:text-white transition-colors">Início</a> <a href="#numeros" class="nav-link text-white/80 hover:text-white transition-colors">Números</a> <a href="#cardapio" class="nav-link text-white/80 hover:text-white transition-colors">Cardápio</a> <a href="#historia" class="nav-link text-white/80 hover:text-white transition-colors">História</a> <a href="#carrinho" class="nav-link text-white/80 hover:text-white transition-colors">Carrinho</a> <a href="#avaliacoes" class="nav-link text-white/80 hover:text-white transition-colors">Avaliações</a> <a href="#contato" class="nav-link text-white/80 hover:text-white transition-colors">Contato</a>
+    </div><button id="mobile-menu-btn" class="md:hidden text-white text-2xl">☰</button>
+   </div><!-- Mobile Menu -->
+   <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+    <div class="flex flex-col gap-4">
+     <a href="#hero" class="text-white/80 hover:text-white transition-colors">Início</a> <a href="#numeros" class="text-white/80 hover:text-white transition-colors">Números</a> <a href="#cardapio" class="text-white/80 hover:text-white transition-colors">Cardápio</a> <a href="#historia" class="text-white/80 hover:text-white transition-colors">História</a> <a href="#carrinho" class="text-white/80 hover:text-white transition-colors">Carrinho</a> <a href="#avaliacoes" class="text-white/80 hover:text-white transition-colors">Avaliações</a> <a href="#contato" class="text-white/80 hover:text-white transition-colors">Contato</a>
+    </div>
+   </div>
+  </nav><!-- Hero Section -->
+  <section id="hero" class="min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden px-6" style="background: radial-gradient(ellipse at top, #ff7b54 0%, #2b1d18 70%);">
+   <!-- Floating Coffee Beans -->
+   <div class="absolute inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute top-20 left-10 text-4xl animate-float" style="animation-delay: 0s;">
+     🫘
+    </div>
+    <div class="absolute top-40 right-20 text-3xl animate-float" style="animation-delay: 1s;">
+     🫘
+    </div>
+    <div class="absolute bottom-40 left-20 text-5xl animate-float" style="animation-delay: 2s;">
+     🫘
+    </div>
+    <div class="absolute bottom-20 right-10 text-4xl animate-float" style="animation-delay: 0.5s;">
+     🫘
+    </div>
+    <div class="absolute top-60 left-1/4 text-2xl animate-float" style="animation-delay: 1.5s;">
+     ✨
+    </div>
+    <div class="absolute top-32 right-1/3 text-2xl animate-float" style="animation-delay: 2.5s;">
+     ✨
+    </div>
+   </div><!-- Coffee Cup Icon with Steam -->
+   <div class="relative mb-8">
+    <div class="steam-container flex gap-2">
+     <div class="steam animate-steam" style="animation-delay: 0s;"></div>
+     <div class="steam animate-steam" style="animation-delay: 0.4s;"></div>
+     <div class="steam animate-steam" style="animation-delay: 0.8s;"></div>
+    </div><span class="text-8xl">☕</span>
+   </div>
+   <h1 id="hero-title" class="font-display text-5xl md:text-7xl font-bold text-white animate-glow mb-4">Body Coffee</h1>
+   <p id="hero-tagline" class="text-xl md:text-2xl text-white/80 mb-8 max-w-lg">O café mais instagramável da cidade</p>
+   <div class="flex flex-col sm:flex-row gap-4">
+    <a href="#cardapio" class="btn-primary px-8 py-4 rounded-full text-white font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-500/30"> Ver Cardápio </a> <a href="#contato" class="px-8 py-4 rounded-full border-2 border-white/30 text-white font-semibold text-lg transition-all duration-300 hover:bg-white/10 hover:border-white/50"> Fale Conosco </a>
+   </div><!-- Scroll Indicator -->
+   <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+    <a href="#numeros" class="text-white/60 hover:text-white transition-colors">
+     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+     </svg></a>
+   </div>
+  </section><!-- Numbers Section -->
+  <section id="numeros" class="py-24 px-6">
+   <div class="max-w-6xl mx-auto">
+    <h2 class="font-display text-4xl md:text-5xl font-bold text-center mb-4"><span class="gradient-text">🔥 Nossos Números</span></h2>
+    <p class="text-white/60 text-center mb-16 text-lg">Resultados que falam por si</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+     <div class="glass-card rounded-3xl p-8 text-center transition-all duration-300 hover:scale-105">
+      <div class="text-5xl mb-4">
+       ☕
       </div>
-    `
-  })
+      <p class="text-4xl md:text-5xl font-bold text-coffee-gold mb-2" id="counter-cafes">0</p>
+      <p class="text-white/70 text-lg">Cafés Servidos</p>
+     </div>
+     <div class="glass-card rounded-3xl p-8 text-center transition-all duration-300 hover:scale-105">
+      <div class="text-5xl mb-4">
+       😊
+      </div>
+      <p class="text-4xl md:text-5xl font-bold text-coffee-gold mb-2" id="counter-clientes">0</p>
+      <p class="text-white/70 text-lg">Clientes Felizes</p>
+     </div>
+     <div class="glass-card rounded-3xl p-8 text-center transition-all duration-300 hover:scale-105">
+      <div class="text-5xl mb-4">
+       📸
+      </div>
+      <p class="text-4xl md:text-5xl font-bold text-coffee-gold mb-2" id="counter-fotos">0</p>
+      <p class="text-white/70 text-lg">Fotos no Instagram</p>
+     </div>
+    </div>
+   </div>
+  </section><!-- Story Section -->
+  <section id="historia" class="py-24 px-6" style="background: linear-gradient(180deg, rgba(255,123,84,0.1), transparent);">
+   <div class="max-w-6xl mx-auto">
+    <h2 class="font-display text-4xl md:text-5xl font-bold text-center mb-4"><span class="gradient-text">👥 Nossa História</span></h2>
+    <p class="text-white/60 text-center mb-16 text-lg">Como tudo começou com 5 amigos e muito café</p><!-- Story Timeline -->
+    <div class="mb-16">
+     <div class="glass-card rounded-2xl p-8 mb-8">
+      <div class="flex flex-col md:flex-row items-start gap-8">
+       <div class="md:w-1/3">
+        <div class="text-6xl mb-4">
+         ☕
+        </div>
+        <h3 class="font-display text-2xl font-semibold text-coffee-gold mb-3">O Começo</h3>
+        <p class="text-white/80">Em 2018, cinco amigos se reuniram em um pequeno apartamento com uma missão: criar o melhor café da cidade. O que começou como um hobby virou obsessão e, logo depois, uma paixão compartilhada.</p>
+       </div>
+       <div class="md:w-2/3">
+        <p class="text-white/70 leading-relaxed">Cada um trouxe sua expertise: João com conhecimento em torra, Maria com paixão por Design, Pedro como gerente, Ana com talento em atendimento e Carlos dominando a parte financeira. Juntos, criaram algo especial que ia além de apenas servir café.</p>
+       </div>
+      </div>
+     </div>
+     <div class="glass-card rounded-2xl p-8 mb-8">
+      <div class="flex flex-col md:flex-row items-start gap-8">
+       <div class="md:w-1/3 order-2 md:order-1">
+        <p class="text-white/70 leading-relaxed">A primeira loja Body Coffee abriu em 2019 em um espaço pequeno, mas aconchegante. A combinação de café excepcional com uma experiência visual memorável conquistou o bairro. Cada detalhe era pensado, desde a xícara até o atendimento.</p>
+       </div>
+       <div class="md:w-2/3 order-1 md:order-2">
+        <div class="text-6xl mb-4">
+         🏪
+        </div>
+        <h3 class="font-display text-2xl font-semibold text-coffee-gold mb-3">Primeira Loja</h3>
+        <p class="text-white/80">O café logo virou point obrigatório para quem quer um bom espresso e uma experiência instagramável. As fotos viralizaram nas redes sociais e mais clientes chegavam a cada dia.</p>
+       </div>
+      </div>
+     </div>
+     <div class="glass-card rounded-2xl p-8 mb-8">
+      <div class="flex flex-col md:flex-row items-start gap-8">
+       <div class="md:w-1/3">
+        <div class="text-6xl mb-4">
+         🌟
+        </div>
+        <h3 class="font-display text-2xl font-semibold text-coffee-gold mb-3">Expansão</h3>
+        <p class="text-white/80">Com o sucesso, novos pontos foram abertos. Mas mantemos sempre a mesma essência: qualidade premium, ambiente acolhedor e equipe apaixonada pelo que faz.</p>
+       </div>
+       <div class="md:w-2/3">
+        <p class="text-white/70 leading-relaxed">Hoje, Body Coffee é mais que um café. É um movimento. Uma comunidade de pessoas que entendem que um bom café é arte, que a apresentação importa e que cada xícara merece ser apreciada e fotografada. Somos os 5 amigos de sempre, só que agora com uma família muito maior ao redor.</p>
+       </div>
+      </div>
+     </div>
+    </div><!-- Team Section -->
+    <div class="mt-20">
+     <h3 class="font-display text-3xl font-semibold text-center text-white mb-12">Os Fundadores</h3>
+     <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+      <!-- João -->
+      <div class="glass-card rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105">
+       <div class="text-5xl mb-4">
+        😊
+       </div>
+       <h4 class="font-display text-lg font-semibold text-white mb-1">João</h4>
+       <p class="text-coffee-gold text-sm font-medium mb-3">Especialista em Torra</p>
+       <p class="text-white/60 text-sm">Mestre em café, busca a perfeição em cada grão</p>
+      </div><!-- Luiz -->
+      <div class="glass-card rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105">
+       <div class="text-5xl mb-4">
+        ✨
+       </div>
+       <h4 class="font-display text-lg font-semibold text-white mb-1">Luiz</h4>
+       <p class="text-coffee-gold text-sm font-medium mb-3">Designer</p>
+       <p class="text-white/60 text-sm">Traz a magia visual que faz você querer fotografar</p>
+      </div><!-- Vinícius -->
+      <div class="glass-card rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105">
+       <div class="text-5xl mb-4">
+        📊
+       </div>
+       <h4 class="font-display text-lg font-semibold text-white mb-1">Vinícius</h4>
+       <p class="text-coffee-gold text-sm font-medium mb-3">Gerente Geral</p>
+       <p class="text-white/60 text-sm">Organiza e alinha o que faz o time funcionar</p>
+      </div><!-- Maria -->
+      <div class="glass-card rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105">
+       <div class="text-5xl mb-4">
+        💖
+       </div>
+       <h4 class="font-display text-lg font-semibold text-white mb-1">Maria</h4>
+       <p class="text-coffee-gold text-sm font-medium mb-3">Atendimento</p>
+       <p class="text-white/60 text-sm">Faz cada cliente se sentir em casa</p>
+      </div><!-- Marjorie -->
+      <div class="glass-card rounded-2xl p-6 text-center transition-all duration-300 hover:scale-105">
+       <div class="text-5xl mb-4">
+        💼
+       </div>
+       <h4 class="font-display text-lg font-semibold text-white mb-1">Marjorie</h4>
+       <p class="text-coffee-gold text-sm font-medium mb-3">Financeiro</p>
+       <p class="text-white/60 text-sm">Garante que o sonho continue crescendo</p>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- Menu Section -->
+  <section id="cardapio" class="py-24 px-6" style="background: linear-gradient(180deg, transparent, rgba(255,123,84,0.1), transparent);">
+   <div class="max-w-6xl mx-auto">
+    <h2 id="menu-section-title" class="font-display text-4xl md:text-5xl font-bold text-center mb-4"><span class="gradient-text">📋 Nosso Cardápio</span></h2>
+    <p class="text-white/60 text-center mb-16 text-lg">Sabores únicos para momentos especiais</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
+      <div class="flex justify-between items-start mb-4">
+       <span class="text-4xl">☕</span> <span class="bg-coffee-orange/20 text-coffee-orange px-3 py-1 rounded-full text-sm font-medium">Popular</span>
+      </div>
+      <h3 class="font-display text-xl font-semibold text-white mb-2">Espresso Clássico</h3>
+      <p class="text-white/60 text-sm mb-4">Shot puro de café premium, intenso e aromático</p>
+      <p class="text-coffee-gold font-bold text-xl">R$ 8,00</p>
+     </div>
+     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
+      <div class="flex justify-between items-start mb-4">
+       <span class="text-4xl">🥛</span> <span class="bg-coffee-gold/20 text-coffee-gold px-3 py-1 rounded-full text-sm font-medium">Favorito</span>
+      </div>
+      <h3 class="font-display text-xl font-semibold text-white mb-2">Cappuccino Body</h3>
+      <p class="text-white/60 text-sm mb-4">Espresso com leite vaporizado e espuma cremosa</p>
+      <p class="text-coffee-gold font-bold text-xl">R$ 14,00</p>
+     </div>
+     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
+      <div class="flex justify-between items-start mb-4">
+       <span class="text-4xl">🍫</span>
+      </div>
+      <h3 class="font-display text-xl font-semibold text-white mb-2">Mocha Especial</h3>
+      <p class="text-white/60 text-sm mb-4">Café com chocolate belga e chantilly artesanal</p>
+      <p class="text-coffee-gold font-bold text-xl">R$ 18,00</p>
+     </div>
+     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
+      <div class="flex justify-between items-start mb-4">
+       <span class="text-4xl">🧊</span> <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm font-medium">Refrescante</span>
+      </div>
+      <h3 class="font-display text-xl font-semibold text-white mb-2">Cold Brew</h3>
+      <p class="text-white/60 text-sm mb-4">Café extraído a frio por 24h, suave e equilibrado</p>
+      <p class="text-coffee-gold font-bold text-xl">R$ 16,00</p>
+     </div>
+     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
+      <div class="flex justify-between items-start mb-4">
+       <span class="text-4xl">🍦</span>
+      </div>
+      <h3 class="font-display text-xl font-semibold text-white mb-2">Affogato</h3>
+      <p class="text-white/60 text-sm mb-4">Espresso quente sobre gelato de baunilha</p>
+      <p class="text-coffee-gold font-bold text-xl">R$ 22,00</p>
+     </div>
+     <div class="menu-item glass-card rounded-2xl p-6 transition-all duration-300 cursor-pointer">
+      <div class="flex justify-between items-start mb-4">
+       <span class="text-4xl">🌿</span> <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-medium">Vegano</span>
+      </div>
+      <h3 class="font-display text-xl font-semibold text-white mb-2">Latte de Aveia</h3>
+      <p class="text-white/60 text-sm mb-4">Espresso com leite de aveia orgânico cremoso</p>
+      <p class="text-coffee-gold font-bold text-xl">R$ 16,00</p>
+     </div>
+    </div>
+   </div>
+  </section><!-- Shopping Cart Section -->
+  <section id="carrinho" class="py-24 px-6" style="background: linear-gradient(180deg, rgba(255,123,84,0.1), transparent);">
+   <div class="max-w-6xl mx-auto">
+    <h2 class="font-display text-4xl md:text-5xl font-bold text-center mb-4"><span class="gradient-text">🛒 Seu Carrinho</span></h2>
+    <p class="text-white/60 text-center mb-16 text-lg">Adicione itens do cardápio para comprar</p>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8"><!-- Menu Items for Cart -->
+     <div class="lg:col-span-2">
+      <div class="glass-card rounded-2xl p-8 mb-8">
+       <h3 class="font-display text-2xl font-semibold text-white mb-6">Selecione seus Itens</h3>
+       <div id="menu-for-cart" class="grid grid-cols-1 md:grid-cols-2 gap-4"><!-- Menu items will be populated here -->
+       </div>
+      </div>
+     </div><!-- Cart Summary -->
+     <div class="lg:col-span-1">
+      <div class="glass-card rounded-2xl p-8 sticky top-24">
+       <h3 class="font-display text-2xl font-semibold text-white mb-6">Resumo</h3>
+       <div id="cart-items-list" class="space-y-3 mb-6 max-h-64 overflow-y-auto">
+        <p class="text-white/60 text-center py-4">Nenhum item adicionado</p>
+       </div>
+       <div class="border-t border-white/20 pt-4 pb-6">
+        <div class="flex justify-between items-center mb-2"><span class="text-white/70">Subtotal:</span> <span class="text-white font-semibold" id="subtotal">R$ 0,00</span>
+        </div>
+        <div class="flex justify-between items-center"><span class="text-white/70">Taxa:</span> <span class="text-white font-semibold" id="tax">R$ 0,00</span>
+        </div>
+       </div>
+       <div class="border-t border-white/20 pt-4 mb-6">
+        <div class="flex justify-between items-center mb-4"><span class="text-white font-semibold">Total:</span> <span class="text-2xl font-bold text-coffee-gold" id="total">R$ 0,00</span>
+        </div>
+       </div><button id="checkout-btn" class="w-full btn-primary py-3 rounded-lg text-white font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled> Prosseguir </button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- Checkout Modal -->
+  <div id="checkout-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4" style="background: rgba(0,0,0,0.8);">
+   <div class="glass-card rounded-2xl p-8 max-w-md w-full max-h-96 overflow-y-auto">
+    <div class="flex justify-between items-center mb-6">
+     <h2 class="font-display text-2xl font-semibold text-white">Finalizar Compra</h2><button id="close-modal" class="text-white/60 hover:text-white text-2xl">✕</button>
+    </div>
+    <form id="checkout-form">
+     <div class="mb-4"><label for="customer-name" class="block text-white font-medium mb-2">Nome Completo</label> <input type="text" id="customer-name" placeholder="Seu nome" class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-coffee-orange transition-colors" required>
+     </div>
+     <div class="mb-4"><label for="customer-email" class="block text-white font-medium mb-2">E-mail</label> <input type="email" id="customer-email" placeholder="seu@email.com" class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-coffee-orange transition-colors" required>
+     </div>
+     <div class="mb-6"><label for="payment-method" class="block text-white font-medium mb-2">Método de Pagamento</label> <select id="payment-method" class="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-coffee-orange transition-colors"> <option value="credit_card">💳 Cartão de Crédito</option> <option value="pix">📱 PIX</option> <option value="debit">🏦 Débito</option> <option value="cash">💵 Dinheiro</option> </select>
+     </div>
+     <div id="pix-container" class="hidden mb-6 p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
+      <p class="text-white font-medium mb-4 text-center">Escaneie o QR Code para pagar com PIX</p>
+      <div id="qrcode" class="flex justify-center mb-4 p-4 bg-white rounded-lg" style="width: 100%; display: flex; justify-content: center;"></div>
+      <p class="text-white/70 text-xs text-center mb-3">Ou copie a chave PIX:</p>
+      <div class="flex gap-2 flex-col sm:flex-row">
+       <input type="text" id="pix-key" value="bodycoffee@email.com" readonly class="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white/80 text-sm focus:outline-none"> <button type="button" id="copy-pix-btn" class="px-4 py-2 bg-coffee-orange hover:bg-coffee-fire text-white rounded-lg font-semibold transition-colors text-sm whitespace-nowrap">Copiar</button>
+      </div>
+     </div>
+     <div class="bg-blue-500/20 border border-blue-500/30 rounded-lg p-3 mb-6 text-blue-300 text-sm">
+      ℹ️ Este é um formulário de demonstração. Os pagamentos não são processados realmente.
+     </div>
+     <div id="checkout-status" class="hidden mb-4 p-3 rounded-lg text-center text-sm"></div>
+     <div class="flex gap-3"><button type="button" id="cancel-checkout" class="flex-1 px-4 py-2 rounded-lg border border-white/30 text-white font-medium hover:bg-white/10 transition-colors"> Cancelar </button> <button type="submit" id="confirm-order" class="flex-1 btn-primary px-4 py-2 rounded-lg text-white font-semibold transition-all duration-300"> Confirmar </button>
+     </div>
+    </form>
+   </div>
+  </div><!-- Reviews Section -->
+  <section id="avaliacoes" class="py-24 px-6">
+   <div class="max-w-6xl mx-auto">
+    <h2 class="font-display text-4xl md:text-5xl font-bold text-center mb-4"><span class="gradient-text">⭐ Avaliações</span></h2>
+    <p class="text-white/60 text-center mb-16 text-lg">O que nossos clientes dizem</p><!-- Review Form -->
+    <div class="glass-card rounded-2xl p-8 mb-16">
+     <h3 class="font-display text-2xl font-semibold text-white mb-6">Deixe sua Avaliação</h3>
+     <form id="review-form">
+      <div class="mb-6">
+       <label for="review-name" class="block text-white font-medium mb-2">Seu Nome</label> <input type="text" id="review-name" placeholder="Digite seu nome" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-coffee-orange transition-colors" required>
+      </div>
+      <div class="mb-6">
+       <label class="block text-white font-medium mb-3">Sua Avaliação</label>
+       <div id="rating-stars" class="flex gap-2 text-4xl">
+        <button type="button" class="star-btn transition-all duration-200 hover:scale-125">☆</button> <button type="button" class="star-btn transition-all duration-200 hover:scale-125">☆</button> <button type="button" class="star-btn transition-all duration-200 hover:scale-125">☆</button> <button type="button" class="star-btn transition-all duration-200 hover:scale-125">☆</button> <button type="button" class="star-btn transition-all duration-200 hover:scale-125">☆</button>
+       </div><input type="hidden" id="review-rating" value="0" required>
+      </div>
+      <div class="mb-6">
+       <label for="review-comment" class="block text-white font-medium mb-2">Seu Comentário</label> <textarea id="review-comment" placeholder="O que você achou?" rows="4" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-coffee-orange transition-colors resize-none" required></textarea>
+      </div><button type="submit" class="w-full btn-primary py-3 rounded-lg text-white font-semibold transition-all duration-300 hover:scale-105">Enviar Avaliação</button>
+      <div id="form-status" class="hidden"></div>
+     </form>
+    </div><!-- Reviews Grid -->
+    <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+    </div><!-- Overall Rating -->
+    <div class="mt-16 text-center">
+     <div class="glass-card inline-block rounded-2xl px-12 py-8">
+      <p id="overall-rating" class="text-6xl font-bold text-coffee-gold mb-2">5.0</p>
+      <div id="overall-stars" class="text-coffee-gold text-2xl mb-2">
+       ★★★★★
+      </div>
+      <p id="rating-count" class="text-white/60">Baseado em 0 avaliações</p>
+     </div>
+    </div>
+   </div>
+  </section><!-- Contact Section -->
+  <section id="contato" class="py-24 px-6" style="background: linear-gradient(180deg, transparent, rgba(255,123,84,0.15));">
+   <div class="max-w-4xl mx-auto">
+    <h2 class="font-display text-4xl md:text-5xl font-bold text-center mb-4"><span class="gradient-text">📍 Visite-nos</span></h2>
+    <p class="text-white/60 text-center mb-16 text-lg">Estamos esperando por você!</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+     <div class="glass-card rounded-2xl p-8">
+      <h3 class="font-display text-2xl font-semibold text-white mb-6">Informações</h3>
+      <div class="space-y-6">
+       <div class="flex items-start gap-4">
+        <span class="text-2xl">📍</span>
+        <div>
+         <p class="text-white font-medium">Endereço</p>
+         <p id="contact-address" class="text-white/70">Rua do Café, 123 - Centro</p>
+         <p class="text-white/70">São José dos Pinhais, PR</p>
+        </div>
+       </div>
+       <div class="flex items-start gap-4">
+        <span class="text-2xl">🕐</span>
+        <div>
+         <p class="text-white font-medium">Horário</p>
+         <p class="text-white/70">Seg - Sex: 7h às 22h</p>
+         <p class="text-white/70">Sáb - Dom: 8h às 23h</p>
+        </div>
+       </div>
+       <div class="flex items-start gap-4">
+        <span class="text-2xl">📞</span>
+        <div>
+         <p class="text-white font-medium">Telefone</p>
+         <p class="text-white/70">(11) 99999-9999</p>
+        </div>
+       </div>
+       <div class="flex items-start gap-4">
+        <span class="text-2xl">📧</span>
+        <div>
+         <p class="text-white font-medium">E-mail</p>
+         <p class="text-white/70">contato@bodycoffee.com.br</p>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="glass-card rounded-2xl p-8">
+      <h3 class="font-display text-2xl font-semibold text-white mb-6">Redes Sociais</h3>
+      <div class="space-y-4">
+       <a href="#" class="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group"> <span class="text-3xl">📸</span>
+        <div>
+         <p class="text-white font-medium group-hover:text-coffee-orange transition-colors">Instagram</p>
+         <p class="text-white/50 text-sm">@bodycoffee</p>
+        </div></a> <a href="#" class="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group"> <span class="text-3xl">📘</span>
+        <div>
+         <p class="text-white font-medium group-hover:text-coffee-orange transition-colors">Facebook</p>
+         <p class="text-white/50 text-sm">/bodycoffeebr</p>
+        </div></a> <a href="#" class="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors group"> <span class="text-3xl">🎵</span>
+        <div>
+         <p class="text-white font-medium group-hover:text-coffee-orange transition-colors">TikTok</p>
+         <p class="text-white/50 text-sm">@bodycoffee</p>
+        </div></a>
+      </div>
+      <div class="mt-8 pt-6 border-t border-white/10">
+       <p class="text-white/60 text-sm text-center">Siga-nos e ganhe 10% de desconto no primeiro pedido! 🎉</p>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- Footer -->
+  <footer class="py-8 px-6 border-t border-white/10">
+   <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+     <span class="text-2xl">☕</span> <span id="footer-brand" class="font-display text-lg font-semibold text-white">Body Coffee</span>
+    </div>
+    <p class="text-white/50 text-sm">© 2024 Body Coffee. Todos os direitos reservados.</p>
+    <div class="flex gap-4 text-2xl">
+     <a href="#" class="hover:scale-110 transition-transform">📸</a> <a href="#" class="hover:scale-110 transition-transform">📘</a> <a href="#" class="hover:scale-110 transition-transform">🎵</a>
+    </div>
+   </div>
+  </footer>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      brand_name: 'Body Coffee',
+      tagline: 'O café mais instagramável da cidade',
+      menu_title: 'Nosso Cardápio',
+      contact_address: 'Rua do Café, 123 - Centro',
+      primary_color: '#ff7b54',
+      secondary_color: '#ffb400',
+      background_color: '#1e1e2f',
+      text_color: '#ffffff',
+      accent_color: '#ff5722'
+    };
 
-  updateAvg()
-}
+    // Data SDK initialization for reviews
+    let allReviews = [];
+    let currentRating = 0;
+    let cartItems = [];
+    let cartTotal = 0;
 
-function updateAvg(){
-  const avg = reviews.reduce((a,b)=>a+b.rating,0)/reviews.length
-  document.getElementById("avg").innerText = avg.toFixed(1)
-}
+    const menuItems = [
+      { id: 1, name: 'Espresso Clássico', price: 8.00, emoji: '☕' },
+      { id: 2, name: 'Cappuccino Body', price: 14.00, emoji: '🥛' },
+      { id: 3, name: 'Mocha Especial', price: 18.00, emoji: '🍫' },
+      { id: 4, name: 'Cold Brew', price: 16.00, emoji: '🧊' },
+      { id: 5, name: 'Affogato', price: 22.00, emoji: '🍦' },
+      { id: 6, name: 'Latte de Aveia', price: 16.00, emoji: '🌿' }
+    ];
 
-function del(i){
-  reviews.splice(i,1)
-  set("reviews",reviews)
-  renderReviews()
-}
+    const dataHandler = {
+      onDataChanged(data) {
+        allReviews = data || [];
+        renderReviews();
+        updateOverallRating();
+      }
+    };
 
-// ================= FORM =================
-document.getElementById("review-form").addEventListener("submit",e=>{
-  e.preventDefault()
+    async function initializeDataSDK() {
+      const result = await window.dataSdk.init(dataHandler);
+      if (!result.isOk) {
+        console.error('Failed to initialize Data SDK');
+      }
+    }
 
-  const name = document.getElementById("name").value
-  const rating = parseInt(document.getElementById("rating").value)
-  const comment = document.getElementById("comment").value
+    function renderReviews() {
+      const container = document.getElementById('reviews-container');
+      
+      if (!allReviews || allReviews.length === 0) {
+        container.innerHTML = '<p class="text-white/60 text-center col-span-full py-8">Seja o primeiro a deixar uma avaliação! ☕</p>';
+        return;
+      }
 
-  reviews.push({name,rating,comment})
-  set("reviews",reviews)
+      container.innerHTML = '';
+      
+      // Show most recent reviews first
+      const sortedReviews = [...allReviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  e.target.reset()
-  renderReviews()
-})
+      sortedReviews.forEach(review => {
+        const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+        const initials = review.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        const reviewDate = new Date(review.createdAt).toLocaleDateString('pt-BR');
+        
+        const reviewEl = document.createElement('div');
+        reviewEl.className = 'glass-card rounded-2xl p-6 transition-all duration-300 hover:scale-105 relative group';
+        reviewEl.dataset.reviewId = review.__backendId;
+        reviewEl.innerHTML = `
+          <button class="delete-review-btn absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity px-2 py-1 rounded bg-red-500/30 hover:bg-red-500/50 text-red-300 text-sm font-medium" data-review-id="${review.__backendId}">✕ Deletar</button>
+          <div class="flex items-center gap-1 mb-4 text-coffee-gold text-lg">
+            ${stars}
+          </div>
+          <p class="text-white/80 mb-4 italic">"${review.comment}"</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-coffee-orange to-coffee-gold flex items-center justify-center text-white font-bold text-sm">
+              ${initials}
+            </div>
+            <div>
+              <p class="text-white font-medium">${review.name}</p>
+              <p class="text-white/50 text-sm">${reviewDate}</p>
+            </div>
+          </div>
+        `;
+        
+        // Add delete functionality
+        const deleteBtn = reviewEl.querySelector('.delete-review-btn');
+        deleteBtn.addEventListener('click', async () => {
+          deleteBtn.disabled = true;
+          deleteBtn.textContent = 'Deletando...';
+          
+          const result = await window.dataSdk.delete(review);
+          
+          if (result.isOk) {
+            reviewEl.style.animation = 'slideUp 0.5s ease-out reverse forwards';
+            setTimeout(() => {
+              reviewEl.remove();
+              updateOverallRating();
+            }, 500);
+          } else {
+            deleteBtn.disabled = false;
+            deleteBtn.textContent = '✕ Erro ao deletar';
+            setTimeout(() => {
+              deleteBtn.textContent = '✕ Deletar';
+            }, 2000);
+          }
+        });
+        
+        container.appendChild(reviewEl);
+      });
+    }
 
-// INIT
-renderReviews()
-</script>
+    function updateOverallRating() {
+      if (!allReviews || allReviews.length === 0) {
+        document.getElementById('overall-rating').textContent = '5.0';
+        document.getElementById('overall-stars').textContent = '★★★★★';
+        document.getElementById('rating-count').textContent = 'Baseado em 0 avaliações';
+        return;
+      }
 
-</body>
+      const average = (allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length).toFixed(1);
+      const fullStars = Math.round(average);
+      const stars = '★'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
+
+      document.getElementById('overall-rating').textContent = average;
+      document.getElementById('overall-stars').textContent = stars;
+      document.getElementById('rating-count').textContent = `Baseado em ${allReviews.length} ${allReviews.length === 1 ? 'avaliação' : 'avaliações'}`;
+    }
+
+    // Review form handling
+    document.getElementById('review-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('review-name').value.trim();
+      const rating = parseInt(document.getElementById('review-rating').value);
+      const comment = document.getElementById('review-comment').value.trim();
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const statusEl = document.getElementById('form-status');
+
+      if (!name || !rating || !comment) {
+        statusEl.className = 'block mt-4 p-4 rounded-lg bg-red-500/20 border border-red-500/30 text-red-300 text-center';
+        statusEl.textContent = 'Por favor, preencha todos os campos!';
+        return;
+      }
+
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+      statusEl.className = 'block mt-4 p-4 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-300 text-center';
+      statusEl.textContent = 'Enviando sua avaliação...';
+
+      const result = await window.dataSdk.create({
+        name,
+        rating,
+        comment,
+        createdAt: new Date().toISOString()
+      });
+
+      if (result.isOk) {
+        statusEl.className = 'block mt-4 p-4 rounded-lg bg-green-500/20 border border-green-500/30 text-green-300 text-center';
+        statusEl.textContent = '✓ Avaliação enviada com sucesso!';
+        
+        // Reset form
+        document.getElementById('review-form').reset();
+        document.getElementById('review-rating').value = '0';
+        currentRating = 0;
+        updateStarDisplay();
+        
+        setTimeout(() => {
+          statusEl.classList.add('hidden');
+        }, 3000);
+      } else {
+        statusEl.className = 'block mt-4 p-4 rounded-lg bg-red-500/20 border border-red-500/30 text-red-300 text-center';
+        statusEl.textContent = '✗ Erro ao enviar. Tente novamente.';
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Enviar Avaliação';
+    });
+
+    // Star rating interaction
+    const starBtns = document.querySelectorAll('.star-btn');
+    const ratingInput = document.getElementById('review-rating');
+
+    function updateStarDisplay() {
+      starBtns.forEach((btn, index) => {
+        if (index < currentRating) {
+          btn.textContent = '★';
+          btn.classList.add('text-coffee-gold', 'scale-110');
+        } else {
+          btn.textContent = '☆';
+          btn.classList.remove('text-coffee-gold', 'scale-110');
+        }
+      });
+    }
+
+    starBtns.forEach((btn, index) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        currentRating = index + 1;
+        ratingInput.value = currentRating;
+        updateStarDisplay();
+      });
+
+      btn.addEventListener('mouseover', (e) => {
+        e.preventDefault();
+        starBtns.forEach((b, i) => {
+          if (i < index + 1) {
+            b.textContent = '★';
+            b.classList.add('text-coffee-gold', 'scale-110');
+          } else {
+            b.textContent = '☆';
+            b.classList.remove('text-coffee-gold', 'scale-110');
+          }
+        });
+      });
+    });
+
+    document.getElementById('rating-stars').addEventListener('mouseleave', updateStarDisplay);
+
+    // Element SDK initialization
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          // Update brand name
+          const brandName = config.brand_name || defaultConfig.brand_name;
+          document.getElementById('nav-brand').textContent = brandName;
+          document.getElementById('hero-title').textContent = brandName;
+          document.getElementById('footer-brand').textContent = brandName;
+          
+          // Update tagline
+          document.getElementById('hero-tagline').textContent = config.tagline || defaultConfig.tagline;
+          
+          // Update menu title
+          const menuTitle = config.menu_title || defaultConfig.menu_title;
+          document.getElementById('menu-section-title').innerHTML = `<span class="gradient-text">📋 ${menuTitle}</span>`;
+          
+          // Update contact address
+          document.getElementById('contact-address').textContent = config.contact_address || defaultConfig.contact_address;
+          
+          // Update colors
+          const primaryColor = config.primary_color || defaultConfig.primary_color;
+          const secondaryColor = config.secondary_color || defaultConfig.secondary_color;
+          
+          document.documentElement.style.setProperty('--primary-color', primaryColor);
+          document.documentElement.style.setProperty('--secondary-color', secondaryColor);
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => { config.primary_color = value; window.elementSdk.setConfig({ primary_color: value }); }
+            },
+            {
+              get: () => config.secondary_color || defaultConfig.secondary_color,
+              set: (value) => { config.secondary_color = value; window.elementSdk.setConfig({ secondary_color: value }); }
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['brand_name', config.brand_name || defaultConfig.brand_name],
+          ['tagline', config.tagline || defaultConfig.tagline],
+          ['menu_title', config.menu_title || defaultConfig.menu_title],
+          ['contact_address', config.contact_address || defaultConfig.contact_address]
+        ])
+      });
+    }
+
+    // Initialize Data SDK
+    initializeDataSDK();
+
+    // Cart functionality
+    function renderCartMenu() {
+      const container = document.getElementById('menu-for-cart');
+      container.innerHTML = '';
+      
+      menuItems.forEach(item => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'glass-card rounded-xl p-4 flex items-center justify-between group hover:scale-105 transition-all duration-300 cursor-pointer';
+        itemEl.innerHTML = `
+          <div class="flex-1">
+            <p class="text-lg font-semibold text-white group-hover:text-coffee-gold transition-colors">${item.emoji} ${item.name}</p>
+            <p class="text-coffee-gold font-bold">R$ ${item.price.toFixed(2)}</p>
+          </div>
+          <button class="add-to-cart-btn ml-4 px-4 py-2 bg-coffee-orange hover:bg-coffee-fire text-white rounded-lg font-semibold transition-colors" data-id="${item.id}">+</button>
+        `;
+        
+        itemEl.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
+          e.preventDefault();
+          addToCart(item);
+        });
+        
+        container.appendChild(itemEl);
+      });
+    }
+
+    function addToCart(item) {
+      const existingItem = cartItems.find(i => i.id === item.id);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cartItems.push({ ...item, quantity: 1 });
+      }
+      updateCartDisplay();
+    }
+
+    function removeFromCart(itemId) {
+      cartItems = cartItems.filter(i => i.id !== itemId);
+      updateCartDisplay();
+    }
+
+    function updateCartDisplay() {
+      const listContainer = document.getElementById('cart-items-list');
+      
+      if (cartItems.length === 0) {
+        listContainer.innerHTML = '<p class="text-white/60 text-center py-4">Nenhum item adicionado</p>';
+        document.getElementById('checkout-btn').disabled = true;
+        updateTotals();
+        return;
+      }
+
+      document.getElementById('checkout-btn').disabled = false;
+      listContainer.innerHTML = '';
+
+      cartItems.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        const itemEl = document.createElement('div');
+        itemEl.className = 'flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/10';
+        itemEl.innerHTML = `
+          <div class="flex-1">
+            <p class="text-white text-sm font-medium">${item.emoji} ${item.name}</p>
+            <p class="text-white/60 text-xs">x${item.quantity} = R$ ${itemTotal.toFixed(2)}</p>
+          </div>
+          <button class="remove-item-btn text-coffee-orange hover:text-coffee-fire transition-colors ml-2" data-id="${item.id}">🗑️</button>
+        `;
+        
+        itemEl.querySelector('.remove-item-btn').addEventListener('click', () => {
+          removeFromCart(item.id);
+        });
+        
+        listContainer.appendChild(itemEl);
+      });
+
+      updateTotals();
+    }
+
+    function updateTotals() {
+      const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const tax = subtotal * 0.1; // 10% tax
+      const total = subtotal + tax;
+
+      document.getElementById('subtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
+      document.getElementById('tax').textContent = `R$ ${tax.toFixed(2)}`;
+      document.getElementById('total').textContent = `R$ ${total.toFixed(2)}`;
+      
+      cartTotal = total;
+    }
+
+    // Checkout modal
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const checkoutModal = document.getElementById('checkout-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const cancelCheckoutBtn = document.getElementById('cancel-checkout');
+    const checkoutForm = document.getElementById('checkout-form');
+    const confirmOrderBtn = document.getElementById('confirm-order');
+
+    checkoutBtn.addEventListener('click', () => {
+      checkoutModal.classList.remove('hidden');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      checkoutModal.classList.add('hidden');
+    });
+
+    cancelCheckoutBtn.addEventListener('click', () => {
+      checkoutModal.classList.add('hidden');
+    });
+
+    checkoutForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('customer-name').value.trim();
+      const email = document.getElementById('customer-email').value.trim();
+      const paymentMethod = document.getElementById('payment-method').value;
+      const statusEl = document.getElementById('checkout-status');
+
+      if (!name || !email) {
+        statusEl.className = 'block p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-300 text-center';
+        statusEl.textContent = 'Por favor, preencha todos os campos!';
+        return;
+      }
+
+      confirmOrderBtn.disabled = true;
+      confirmOrderBtn.textContent = 'Processando...';
+      statusEl.className = 'block p-3 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-300 text-center';
+      statusEl.textContent = 'Processando pedido...';
+
+      // Create order record
+      const orderItems = cartItems.map(i => `${i.quantity}x ${i.name}`).join(', ');
+      
+      const result = await window.dataSdk.create({
+        orderId: `ORD-${Date.now()}`,
+        orderItems,
+        orderTotal: cartTotal,
+        orderPayment: paymentMethod,
+        orderStatus: 'Confirmado',
+        orderDate: new Date().toISOString(),
+        name,
+        comment: `E-mail: ${email}`,
+        rating: 5
+      });
+
+      if (result.isOk) {
+        statusEl.className = 'block p-3 rounded-lg bg-green-500/20 border border-green-500/30 text-green-300 text-center';
+        statusEl.textContent = '✓ Pedido confirmado com sucesso!';
+
+        // Reset cart
+        cartItems = [];
+        updateCartDisplay();
+        checkoutForm.reset();
+        
+        setTimeout(() => {
+          checkoutModal.classList.add('hidden');
+          statusEl.classList.add('hidden');
+        }, 3000);
+      } else {
+        statusEl.className = 'block p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-300 text-center';
+        statusEl.textContent = '✗ Erro ao processar pedido. Tente novamente.';
+      }
+
+      confirmOrderBtn.disabled = false;
+      confirmOrderBtn.textContent = 'Confirmar';
+    });
+
+    // Payment method toggle
+    const paymentMethodSelect = document.getElementById('payment-method');
+    const pixContainer = document.getElementById('pix-container');
+    const copyPixBtn = document.getElementById('copy-pix-btn');
+    let qrcodeInstance = null;
+
+    paymentMethodSelect.addEventListener('change', () => {
+      if (paymentMethodSelect.value === 'pix') {
+        pixContainer.classList.remove('hidden');
+        
+        // Clear previous QR code
+        const qrcodeDiv = document.getElementById('qrcode');
+        qrcodeDiv.innerHTML = '';
+        
+        // Generate new QR code with PIX key
+        qrcodeInstance = new QRCode(qrcodeDiv, {
+          text: 'bodycoffee@email.com',
+          width: 200,
+          height: 200,
+          colorDark: '#ff7b54',
+          colorLight: '#ffffff'
+        });
+      } else {
+        pixContainer.classList.add('hidden');
+      }
+    });
+
+    // Copy PIX key
+    copyPixBtn.addEventListener('click', () => {
+      const pixKey = document.getElementById('pix-key');
+      pixKey.select();
+      document.execCommand('copy');
+      
+      const originalText = copyPixBtn.textContent;
+      copyPixBtn.textContent = '✓ Copiado!';
+      copyPixBtn.classList.add('bg-green-500');
+      
+      setTimeout(() => {
+        copyPixBtn.textContent = originalText;
+        copyPixBtn.classList.remove('bg-green-500');
+      }, 2000);
+    });
+
+    // Initialize cart display
+    renderCartMenu();
+    updateCartDisplay();
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when clicking a link
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    // Counter animation with Intersection Observer
+    const counters = [
+      { id: 'counter-cafes', target: 12000, suffix: '+' },
+      { id: 'counter-clientes', target: 8500, suffix: '+' },
+      { id: 'counter-fotos', target: 25000, suffix: '+' }
+    ];
+
+    let countersAnimated = false;
+
+    const animateCounters = () => {
+      if (countersAnimated) return;
+      countersAnimated = true;
+
+      counters.forEach(counter => {
+        const element = document.getElementById(counter.id);
+        const duration = 2000;
+        const steps = 60;
+        const increment = counter.target / steps;
+        let current = 0;
+        
+        const updateCounter = () => {
+          current += increment;
+          if (current >= counter.target) {
+            element.textContent = counter.target.toLocaleString('pt-BR') + counter.suffix;
+            element.classList.add('animate-count');
+          } else {
+            element.textContent = Math.floor(current).toLocaleString('pt-BR') + counter.suffix;
+            setTimeout(updateCounter, duration / steps);
+          }
+        };
+        
+        updateCounter();
+      });
+    };
+
+    // Intersection Observer for counters
+    const numerosSection = document.getElementById('numeros');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounters();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(numerosSection);
+
+    // Navbar background on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.style.background = 'rgba(30, 30, 47, 0.95)';
+      } else {
+        navbar.style.background = 'rgba(255, 255, 255, 0.08)';
+      }
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ddfed9b34b20315',t:'MTc3Mzc5MTcyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
