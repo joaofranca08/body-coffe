@@ -1,177 +1,164 @@
-<!DOCTYPE html>
-<html lang="pt-BR" class="h-full">
+<!doctype html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Body Coffee | Simulação Acadêmica</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <style>
-        :root { --orange: #ff7b54; --dark: #1e1e2f; }
-        body { font-family: 'Poppins', sans-serif; background: #1e1e2f; color: white; scroll-behavior: smooth; }
-        .font-display { font-family: 'Playfair Display', serif; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-coffee { background: linear-gradient(90deg, #ff7b54, #ff5722); transition: 0.3s; cursor: pointer; border: none; color: white; font-weight: bold; }
-        .btn-coffee:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 87, 34, 0.4); }
-        
-        /* Simulação de Carregamento */
-        .loader { width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid var(--orange); border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Body Coffee</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- CSS externo -->
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="h-full">
 
-    <!-- Navegação -->
-    <nav class="fixed top-0 w-full z-50 glass p-4 flex justify-between items-center px-8">
-        <h1 class="font-display text-2xl">☕ Body Coffee</h1>
-        <div class="flex gap-4">
-            <button onclick="showTab('menu')" class="opacity-80 hover:opacity-100">Menu</button>
-            <button onclick="showTab('reviews')" class="opacity-80 hover:opacity-100">Avaliações</button>
-            <button onclick="openCart()" class="btn-coffee px-4 py-1 rounded-full text-sm">🛒 Carrinho (<span id="cart-count">0</span>)</button>
-        </div>
-    </nav>
+<body>
 
-    <!-- TELA 1: MENU (CARDÁPIO) -->
-    <section id="menu" class="tab-content active pt-24 pb-12 px-6 max-w-6xl mx-auto">
-        <div class="text-center mb-12">
-            <h2 class="font-display text-5xl mb-2">Nosso Cardápio</h2>
-            <p class="opacity-60">Toque para adicionar ao seu pedido</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="glass p-8 rounded-3xl text-center">
-                <div class="text-5xl mb-4">☕</div>
-                <h3 class="text-xl font-bold">Pink Latte</h3>
-                <p class="text-orange-400 font-bold text-2xl my-4">R$ 15,00</p>
-                <button onclick="addToCart('Pink Latte', 15)" class="btn-coffee w-full py-2 rounded-xl">ADICIONAR</button>
-            </div>
-            <div class="glass p-8 rounded-3xl text-center">
-                <div class="text-5xl mb-4">🍩</div>
-                <h3 class="text-xl font-bold">Donut Gold</h3>
-                <p class="text-orange-400 font-bold text-2xl my-4">R$ 12,00</p>
-                <button onclick="addToCart('Donut Gold', 12)" class="btn-coffee w-full py-2 rounded-xl">ADICIONAR</button>
-            </div>
-            <div class="glass p-8 rounded-3xl text-center">
-                <div class="text-5xl mb-4">🍰</div>
-                <h3 class="text-xl font-bold">Red Velvet</h3>
-                <p class="text-orange-400 font-bold text-2xl my-4">R$ 20,00</p>
-                <button onclick="addToCart('Red Velvet', 20)" class="btn-coffee w-full py-2 rounded-xl">ADICIONAR</button>
-            </div>
-        </div>
-    </section>
+<h1 class="text-4xl mb-6 text-center">☕ Body Coffee</h1>
 
-    <!-- TELA 2: AVALIAÇÕES (SIMULADAS) -->
-    <section id="reviews" class="tab-content pt-24 pb-12 px-6 max-w-2xl mx-auto">
-        <h2 class="font-display text-4xl text-center mb-8">O que dizem os alunos</h2>
-        <div class="glass p-6 rounded-2xl mb-8">
-            <input type="text" id="rev-name" placeholder="Seu nome" class="w-full bg-white/5 border border-white/10 p-3 rounded-lg mb-4 outline-none">
-            <textarea id="rev-text" placeholder="Sua opinião sobre o projeto..." class="w-full bg-white/5 border border-white/10 p-3 rounded-lg mb-4 h-24 outline-none"></textarea>
-            <button onclick="saveReview()" class="btn-coffee w-full py-3 rounded-xl">PUBLICAR COMENTÁRIO</button>
-        </div>
-        <div id="review-list" class="space-y-4">
-            <!-- Comentários aparecerão aqui -->
-        </div>
-    </section>
+<!-- CARDÁPIO -->
+<div class="grid md:grid-cols-3 gap-4 mb-10">
 
-    <!-- MODAL: CARRINHO E PAGAMENTO -->
-    <div id="cart-modal" class="fixed inset-0 bg-black/90 hidden z-50 items-center justify-center p-4">
-        <div class="glass p-8 rounded-3xl max-w-md w-full" id="modal-body">
-            <h2 class="text-2xl font-bold mb-6">Seu Pedido</h2>
-            <div id="cart-items" class="mb-6 space-y-3 border-b border-white/10 pb-4"></div>
-            <div class="flex justify-between text-xl font-bold mb-8">
-                <span>Total:</span> <span id="cart-total">R$ 0,00</span>
-            </div>
-            <div id="payment-zone">
-                <button onclick="startSimulation()" class="btn-coffee w-full py-4 rounded-xl text-lg">SIMULAR PAGAMENTO</button>
-                <button onclick="closeCart()" class="w-full mt-4 opacity-50">Continuar Navegando</button>
-            </div>
-        </div>
-    </div>
+  <div class="glass">
+    <h2>Espresso</h2>
+    <p>R$ 8</p>
+    <button class="btn" onclick="addToCart('Espresso',8)">+</button>
+  </div>
 
-    <script>
-        let cart = [];
+  <div class="glass">
+    <h2>Cappuccino</h2>
+    <p>R$ 14</p>
+    <button class="btn" onclick="addToCart('Cappuccino',14)">+</button>
+  </div>
 
-        // Navegação entre abas
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-        }
+  <div class="glass">
+    <h2>Mocha</h2>
+    <p>R$ 18</p>
+    <button class="btn" onclick="addToCart('Mocha',18)">+</button>
+  </div>
 
-        // Sistema de Carrinho
-        function addToCart(name, price) {
-            cart.push({name, price});
-            document.getElementById('cart-count').innerText = cart.length;
-            alert(name + " adicionado ao protótipo!");
-        }
+</div>
 
-        function openCart() {
-            const modal = document.getElementById('cart-modal');
-            modal.style.display = 'flex';
-            const list = document.getElementById('cart-items');
-            let total = 0;
-            list.innerHTML = cart.map(i => {
-                total += i.price;
-                return `<div class="flex justify-between"><span>${i.name}</span><b>R$ ${i.price},00</b></div>`;
-            }).join('');
-            document.getElementById('cart-total').innerText = `R$ ${total},00`;
-        }
+<!-- CARRINHO -->
+<div class="glass mb-10">
+  <h2 class="text-2xl mb-4">🛒 Carrinho</h2>
+  <div id="cart-items"></div>
+  <p class="mt-4">Total: <span id="total">R$ 0</span></p>
+  <button class="btn mt-4" onclick="checkout()">Finalizar Pedido</button>
+</div>
 
-        function closeCart() {
-            document.getElementById('cart-modal').style.display = 'none';
-        }
+<!-- AVALIAÇÕES -->
+<div class="glass mb-10">
+  <h2 class="text-2xl mb-4">⭐ Avaliações</h2>
 
-        // Simulação de Pagamento
-        function startSimulation() {
-            if(cart.length === 0) return alert("Adicione itens primeiro!");
-            const zone = document.getElementById('payment-zone');
-            zone.innerHTML = `<div class="text-center py-4"><div class="loader mb-2"></div><p>Validando Cartão Simulado...</p></div>`;
-            
-            setTimeout(() => {
-                document.getElementById('modal-body').innerHTML = `
-                    <div class="text-center">
-                        <div class="text-green-500 text-6xl mb-4">✔</div>
-                        <h2 class="text-3xl font-bold mb-2">PAGO COM SUCESSO!</h2>
-                        <p class="opacity-60 mb-6">Trabalho Escolar: Transação Simulada</p>
-                        <div class="bg-white/5 p-4 rounded-xl text-left text-sm mb-6">
-                            <b>RECIBO DIGITAL</b><br>
-                            ID: #${Math.floor(Math.random()*99999)}<br>
-                            Valor Pago: ${document.getElementById('cart-total').innerText}
-                        </div>
-                        <button onclick="location.reload()" class="btn-coffee w-full py-3 rounded-xl">CONCLUIR</button>
-                    </div>
-                `;
-            }, 2500);
-        }
+  <form id="review-form" class="mb-4">
+    <input id="name" placeholder="Nome" class="text-black p-2 w-full mb-2">
+    <input id="rating" type="number" max="5" min="1" placeholder="Nota (1-5)" class="text-black p-2 w-full mb-2">
+    <textarea id="comment" placeholder="Comentário" class="text-black p-2 w-full mb-2"></textarea>
+    <button class="btn w-full">Enviar</button>
+  </form>
 
-        // Sistema de Avaliações (LocalStorage)
-        function saveReview() {
-            const name = document.getElementById('rev-name').value;
-            const text = document.getElementById('rev-text').value;
-            if(!name || !text) return alert("Preencha o comentário!");
-            
-            const rev = { name, text };
-            let reviews = JSON.parse(localStorage.getItem('sc_revs') || '[]');
-            reviews.unshift(rev);
-            localStorage.setItem('sc_revs', JSON.stringify(reviews));
-            renderReviews();
-            document.getElementById('rev-name').value = '';
-            document.getElementById('rev-text').value = '';
-        }
+  <p>Média: <span id="avg">0.0</span></p>
+  <div id="reviews"></div>
+</div>
 
-        function renderReviews() {
-            const list = document.getElementById('review-list');
-            const reviews = JSON.parse(localStorage.getItem('sc_revs') || '[]');
-            list.innerHTML = reviews.map(r => `
-                <div class="glass p-4 rounded-xl">
-                    <b class="text-orange-400">${r.name}</b>
-                    <p class="text-sm opacity-80 mt-1">${r.text}</p>
-                </div>
-            `).join('');
-        }
+<script>
+// ================= STORAGE =================
+function get(key){
+  return JSON.parse(localStorage.getItem(key)) || []
+}
 
-        window.onload = renderReviews;
-    </script>
+function set(key,data){
+  localStorage.setItem(key, JSON.stringify(data))
+}
+
+// ================= CARRINHO =================
+let cart = []
+
+function addToCart(name,price){
+  cart.push({name,price})
+  renderCart()
+}
+
+function renderCart(){
+  const el = document.getElementById("cart-items")
+  el.innerHTML = ""
+
+  let total = 0
+
+  cart.forEach(item=>{
+    total += item.price
+    el.innerHTML += `<p>${item.name} - R$ ${item.price}</p>`
+  })
+
+  document.getElementById("total").innerText = "R$ "+total.toFixed(2)
+}
+
+function checkout(){
+  let orders = get("orders")
+  orders.push(cart)
+  set("orders",orders)
+
+  alert("Pedido realizado!")
+
+  cart = []
+  renderCart()
+}
+
+// ================= AVALIAÇÕES =================
+let reviews = get("reviews")
+
+function renderReviews(){
+  const el = document.getElementById("reviews")
+  el.innerHTML = ""
+
+  if(reviews.length === 0){
+    el.innerHTML = "<p>Sem avaliações ainda</p>"
+    return
+  }
+
+  reviews.forEach((r,i)=>{
+    el.innerHTML += `
+      <div class="mt-2">
+        <strong>${r.name}</strong> (${r.rating}⭐)
+        <p>${r.comment}</p>
+        <button onclick="del(${i})">❌</button>
+      </div>
+    `
+  })
+
+  updateAvg()
+}
+
+function updateAvg(){
+  const avg = reviews.reduce((a,b)=>a+b.rating,0)/reviews.length
+  document.getElementById("avg").innerText = avg.toFixed(1)
+}
+
+function del(i){
+  reviews.splice(i,1)
+  set("reviews",reviews)
+  renderReviews()
+}
+
+// ================= FORM =================
+document.getElementById("review-form").addEventListener("submit",e=>{
+  e.preventDefault()
+
+  const name = document.getElementById("name").value
+  const rating = parseInt(document.getElementById("rating").value)
+  const comment = document.getElementById("comment").value
+
+  reviews.push({name,rating,comment})
+  set("reviews",reviews)
+
+  e.target.reset()
+  renderReviews()
+})
+
+// INIT
+renderReviews()
+</script>
+
 </body>
 </html>
